@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ユーザー新規登録</title>
+  </head>
+
+  <body>
+    <h2>ユーザー新規登録</h2>
+    <form
+        action = "{{url_for('crud.create_user')}}"
+        method="POST"
+        novalidate = "novalidate"
+    >
+        {{form.csrf_token}}
+        <p>
+            {{form.username.label}}{{form.username(placeholder="ユーザー名")}}
+        </p>
+        {% for error in form.username.errors %}
+
+</p>
+
+<span style="color: red;">{{ error }}</span> {% endfor %}
+
+<p>
+
+{{ form.email.label }} {{ form.email(placeholder="X-7 FUZ") }}
+
+</p>
+
+{% for error in form.email.errors %}
+
+<span style="color: red;">{{ error }}</span>
+
+{% endfor %}
+
+<p>
+
+{{ form.password.label }} {{ form.password (placeholder="27-
+
+) }
+
+</p> {% for error in form.password.errors %}
+
+<span style="color: red;">{{ error }}</span> {% endfor %}
+
+<p>{{ form.submit() }}</p>
+
+</form>
+  </body>
+</html>
