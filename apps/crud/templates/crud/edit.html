@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>ユーザーの一覧</title>
-    <link
-      rel="stylesheet"
-      href="{{url_for('crud.static',filename = 'style.css')}}"
-    />
-  </head>
-  <body>
+{% extends 'crud/base.html' %}
+{% block titile%}ユーザー編集{%endblock%}
+{%block content%}
     <h2>ユーザー編集</h2>
     <form
       action="{{ url_for('crud.edit_user', user_id=user.id) }}"
@@ -46,5 +38,4 @@
       {{ form.csrf_token }}
       <input type="submit" value="削除" />
     </form>
-  </body>
-</html>
+{% endblock %}
