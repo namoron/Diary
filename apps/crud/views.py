@@ -1,10 +1,9 @@
-from flask import Blueprint,render_template,redirect,url_for
-#dbをimportする
 from apps.app import db
-#Userクラスをimportする
-from apps.crud.models import User
 from apps.crud.forms import UserForm
+from apps.crud.models import User
+from flask import Blueprint, redirect, render_template, url_for
 from flask_login import login_required
+
 # Blueprintでcrudアプリを生成する
 crud = Blueprint(
     "crud",
@@ -13,12 +12,13 @@ crud = Blueprint(
     static_folder="static",
 )
 
+
 # indexエンドポイントを作成しindex.htmlを返す
 @crud.route("/")
-#デコレーターを追加する
 @login_required
 def index():
-    return render_template("crud/index.html")  
+    return render_template("crud/index.html")
+
 
 @crud.route("/sql")
 @login_required
@@ -26,55 +26,62 @@ def sql():
     db.session.query(User).all()
     return "コンソールログを確認してください"
 
-@crud.route("/users/new",methods=["GET","POST"])
+
+@crud.route("/users/new", methods=["GET", "POST"])
 @login_required
 def create_user():
-    #UserForm をインスタンス化
+    # UserFormをインスタンス化する
     form = UserForm()
-    #フォーム値をバリデート
+
+    # フォームの値をバリデートする
     if form.validate_on_submit():
         # ユーザーを作成する
         user = User(
-            username = form.username.data,
+            username=form.username.data,
             email=form.email.data,
             password=form.password.data,
         )
+
         # ユーザーを追加してコミットする
         db.session.add(user)
         db.session.commit()
-        #ユーザーの一覧画面へリダイレクト
-        return redirect(url_for("crud.users"))
 
-    return render_template("crud/create.html",form=form)
+        # ユーザーの一覧画面へリダイレクトする
+        return redirect(url_for("crud.users"))
+    return render_template("crud/create.html", form=form)
+
 
 @crud.route("/users")
 @login_required
 def users():
     """ユーザーの一覧を取得する"""
     users = User.query.all()
-    return render_template("crud/index.html",users=users)
+    return render_template("crud/index.html", users=users)
 
-# methodにGETとPOSTを指定する
-@crud.route("/users/<user_id>",methods=["GET","POST"])
+
+# methodsにGETとPOSTを指定する
+@crud.route("/users/<user_id>", methods=["GET", "POST"])
 @login_required
 def edit_user(user_id):
-    form =UserForm()
+    form = UserForm()
 
-    #Userモデルを利用してユーザーを取得する
-    user=User.query.filter_by(id=user_id).first()
+    # Userモデルを利用してユーザーを取得する
+    user = User.query.filter_by(id=user_id).first()
 
-    #formからサブミットされた場合はユーザーを更新しユーザーの一覧画面へリダイレクト
+    # formからサブミットされた場合はユーザーを更新しユーザーの一覧画面へリダイレクトする
     if form.validate_on_submit():
         user.username = form.username.data
         user.email = form.email.data
+        user.password = form.password.data
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for("crud.user"))
+        return redirect(url_for("crud.users"))
 
     # GETの場合はHTMLを返す
-    return render_template ("crud/edit.html",user=user,form=form)
+    return render_template("crud/edit.html", user=user, form=form)
 
-@crud.route("/user/<user_id>/delete",methods={"POST"})
+
+@crud.route("/users/<user_id>/delete", methods=["POST"])
 @login_required
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
