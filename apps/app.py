@@ -31,7 +31,11 @@ def create_app(config_key):
     csrf.init_app(app)
     # crud パッケージからviewsをimportする
     from apps.crud import views as crud_views
+    #これから作成するdetectorパッケージからviewsをimportする
+    from apps.detector import views as dt_views
 
+    # register_blueprintを使いviewsのdtをアプリへ登録する
+    app.register_blueprint(dt_views.dt)
     # register_blueprintを使いviewsのcrudをアプリへ登録する
     app.register_blueprint(crud_views.crud,url_prefix="/crud")
 
