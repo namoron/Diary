@@ -66,3 +66,7 @@ def upload_image():
 
         return redirect(url_for("detector.index"))
     return render_template("detector/upload.html", form=form)
+
+@dt.errorhandler(404)
+def page_not_found(e):
+    return render_template("detector/404.html"),404
