@@ -8,9 +8,15 @@
         {{ form.csrf_token }}
         <div>
             <label>
+                <span> {{ form.date(class="form-control-file") }} </span>
+            </label>
+        </div>
+        <div>
+            <label>
                 <span> {{ form.image(class="form-control-file") }} </span>
             </label>
         </div>
+
         {% for error in form.image.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}

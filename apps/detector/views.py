@@ -7,6 +7,7 @@ from apps.crud.models import User
 # UploadImageFormをimportする
 from apps.detector.forms import UploadImageForm
 from apps.detector.models import UserImage
+from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
     Blueprint,
     current_app,
@@ -55,12 +56,15 @@ def upload_image():
         ext = Path(file.filename).suffix
         image_uuid_file_name = str(uuid.uuid4()) + ext
 
+        # 日付データをフォームから取得
+        date = form.date.data
+
         # 画像を保存する
         image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
         file.save(image_path)
 
         # DBに保存する
-        user_image = UserImage(user_id=current_user.id, image_path=image_uuid_file_name)
+        user_image = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date)
         db.session.add(user_image)
         db.session.commit()
 

@@ -12,3 +12,5 @@ class UserImage(db.Model):
     is_detected = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    # 新しい日付カラムを追加
+    date = db.Column(db.Date, nullable=True)  # 日付データを保存するためにDate型を使用
