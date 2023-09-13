@@ -8,10 +8,6 @@ class UserImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # user_idはusersテーブルのidカラムを外部キーとして設定する
     user_id = db.Column(db.String, db.ForeignKey("users.id"))
-    image_path = db.Column(db.String)
-    is_detected = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
-    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     # 新しい日付カラムを追加
     date = db.Column(db.Date, nullable=True)  # 日付データを保存するためにDate型を使用
     # 日記の文章を保存する
@@ -22,3 +18,7 @@ class UserImage(db.Model):
             raise ValidationError("日記の文章は10文字以上で入力してください。")
     def __repr__(self):
         return f"<UserImage {self.id}>"
+    image_path = db.Column(db.String)
+    is_detected = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

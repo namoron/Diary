@@ -6,19 +6,24 @@
 </div>
 <!-- 画像一覧を表示する -->
 {% for diary in diaries %}
-<div class="card col-md-7 dt-image-content">
-    <header class="d-flex justify-content-between">
-        <!-- 日付を表示 (存在しない場合は表示しない) -->
-        {% if diary.UserImage.date %}
-            <div class="dt-image-date">{{ diary.UserImage.date.strftime('%Y-%m-%d') }}</div>
+    {% if diary.UserImage.date %}
+        {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
+        {% if diary_date[-5:] == current_date[-5:] %}
+            <!-- 年月日の後半（月日部分）が一致する場合に表示 -->
+            <div class="card col-md-7 dt-image-content">
+                <header class="d-flex justify-content-between">
+                    <!-- 日付を表示 (存在しない場合は表示しない) -->
+                    <h2>{{ diary_date }}</h2>
+                    <hr>
+                </header>
+                <div class="dt-image-text">
+                    <p>{{ diary.UserImage.diary_text }}</p>
+                </div>
+                <section>
+                    <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                </section>
+            </div>
         {% endif %}
-    </header>
-    <section>
-        <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
-    </section>
-    <div class="dt-image-text">
-        <p>{{ diary.UserImage.diary_text }}</p>
-    </div>
-</div>
+    {% endif %}
 {% endfor %}
 {% endblock %}

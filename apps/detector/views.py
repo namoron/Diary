@@ -1,11 +1,11 @@
 import uuid
 from pathlib import Path
-
+from werkzeug.utils import secure_filename
 from apps.app import db
 from apps.crud.models import User
-
-# UploadImageFormをimportする
-from apps.detector.forms import UploadImageForm
+from sqlalchemy import desc  # 追加
+# UploadDiaryFormをimportする
+from apps.detector.forms import UploadDiaryForm
 from apps.detector.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
@@ -27,14 +27,18 @@ dt = Blueprint("detector", __name__, template_folder="templates")
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
 def index():
+    #今日の日付
+    current_date = datetime.now().strftime('%Y-%m-%d')
     # UserとUserImageをJoinして画像一覧を取得する
+    # ソート順を日付が新しいものが先に来るように修正
     diaries = (
         db.session.query(User, UserImage)
         .join(UserImage)
         .filter(User.id == UserImage.user_id)
+        .order_by(desc(UserImage.date))  # ここで日付が新しいものが先に来るようにソート
         .all()
     )
-    return render_template("detector/index.html", diaries=diaries)
+    return render_template("detector/index.html",current_date=current_date, diaries=diaries)
 
 
 @dt.route("/images/<path:filename>")
@@ -46,15 +50,16 @@ def image_file(filename):
 # ログイン必須とする
 @login_required
 def upload_image():
-    # UploadImageFormを利用してバリデーションをする
-    form = UploadImageForm()
+
+    # UploadDiaryFormを利用してバリデーションをする
+    form = UploadDiaryForm()
     if form.validate_on_submit():
         # アップロードされた画像ファイルを取得する
         file = form.image.data
 
-        # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
-        ext = Path(file.filename).suffix
-        image_uuid_file_name = str(uuid.uuid4()) + ext
+        # アップロードされた画像ファイル名から拡張子を取得
+        original_filename = secure_filename(file.filename)
+        ext = Path(original_filename).suffix
 
         # 日付データをフォームから取得
         date = form.date.data
@@ -62,17 +67,22 @@ def upload_image():
         # 日記の文章を取得する
         diary_text = form.diary_text.data
 
+        # 日付をファイル名に追加する（拡張子を含む）
+        formatted_date = date.strftime('%Y%m%d')
+        image_uuid_file_name = f"{formatted_date}{ext}"
+
         # 画像を保存する
         image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
         file.save(image_path)
 
         # DBに保存する
-        diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date,diary_text=diary_text)
+        diary = UserImage(user_id=current_user.id, date=date, diary_text=diary_text, image_path=image_uuid_file_name)
         db.session.add(diary)
         db.session.commit()
 
         return redirect(url_for("detector.index"))
     return render_template("detector/upload.html", form=form)
+
 
 @dt.errorhandler(404)
 def page_not_found(e):

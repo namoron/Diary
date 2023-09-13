@@ -4,7 +4,7 @@ from wtforms.fields.simple import SubmitField
 from wtforms import DateField,TextAreaField
 
 
-class UploadImageForm(FlaskForm):
+class UploadDiaryForm(FlaskForm):
     # ファイルフィールドに必要なバリデーションを設定する
     # 日付フィールドを追加
     date = DateField("日付")
