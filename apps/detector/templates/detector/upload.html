@@ -1,22 +1,28 @@
 {% extends "detector/base.html" %}
 {% block content %}
 <div>
-    <h4>画像新規登録</h4>
-    <p>アップロードする画像を選択してください</p>
+    <h4>新規投稿</h4>
     <form action="{{ url_for('detector.upload_image') }}" method="post" enctype="multipart/form-data"
-        novalidate="novalidate">
-        {{ form.csrf_token }}
-        <div>
-            <label>
-                <span> {{ form.date(class="form-control-file") }} </span>
-            </label>
-        </div>
+    novalidate="novalidate">
+    {{ form.csrf_token }}
+    <div>
+        <label>
+            <span> {{ form.date(class="form-control-file") }} </span>
+        </label>
+    </div>
         <div>
             <label>
                 <span> {{ form.image(class="form-control-file") }} </span>
             </label>
         </div>
-
+        <div>
+            <label>
+                <span> {{ form.diary_text(class="form-control") }} </span>
+            </label>
+            {% for error in form.diary_text.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
         {% for error in form.image.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}

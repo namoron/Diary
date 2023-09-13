@@ -5,18 +5,20 @@
     <a href="{{ url_for('detector.upload_image') }}" class="btn btn-primary">日記投稿</a>
 </div>
 <!-- 画像一覧を表示する -->
-{% for user_image in user_images %}
+{% for diary in diaries %}
 <div class="card col-md-7 dt-image-content">
     <header class="d-flex justify-content-between">
-        <div class="dt-image-username">{{ user_image.User.username }}</div>
         <!-- 日付を表示 (存在しない場合は表示しない) -->
-        {% if user_image.UserImage.date %}
-            <div class="dt-image-date">{{ user_image.UserImage.date.strftime('%Y-%m-%d') }}</div>
+        {% if diary.UserImage.date %}
+            <div class="dt-image-date">{{ diary.UserImage.date.strftime('%Y-%m-%d') }}</div>
         {% endif %}
     </header>
     <section>
-        <img src="{{ url_for('detector.image_file', filename=user_image.UserImage.image_path) }}" alt="アップロード画像" />
+        <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
     </section>
+    <div class="dt-image-text">
+        <p>{{ diary.UserImage.diary_text }}</p>
+    </div>
 </div>
 {% endfor %}
 {% endblock %}

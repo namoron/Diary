@@ -28,13 +28,13 @@ dt = Blueprint("detector", __name__, template_folder="templates")
 @dt.route("/")
 def index():
     # UserとUserImageをJoinして画像一覧を取得する
-    user_images = (
+    diaries = (
         db.session.query(User, UserImage)
         .join(UserImage)
         .filter(User.id == UserImage.user_id)
         .all()
     )
-    return render_template("detector/index.html", user_images=user_images)
+    return render_template("detector/index.html", diaries=diaries)
 
 
 @dt.route("/images/<path:filename>")
@@ -59,13 +59,16 @@ def upload_image():
         # 日付データをフォームから取得
         date = form.date.data
 
+        # 日記の文章を取得する
+        diary_text = form.diary_text.data
+
         # 画像を保存する
         image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
         file.save(image_path)
 
         # DBに保存する
-        user_image = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date)
-        db.session.add(user_image)
+        diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date,diary_text=diary_text)
+        db.session.add(diary)
         db.session.commit()
 
         return redirect(url_for("detector.index"))
