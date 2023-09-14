@@ -29,6 +29,8 @@ dt = Blueprint("detector", __name__, template_folder="templates")
 def index():
     #今日の日付
     current_date = datetime.now().strftime('%Y-%m-%d')
+    #今日の曜日
+    current_day = datetime.now().strftime('%a')
     # UserとUserImageをJoinして画像一覧を取得する
     # ソート順を日付が新しいものが先に来るように修正
     diaries = (
@@ -38,7 +40,7 @@ def index():
         .order_by(desc(UserImage.date))  # ここで日付が新しいものが先に来るようにソート
         .all()
     )
-    return render_template("detector/index.html",current_date=current_date, diaries=diaries)
+    return render_template("detector/index.html",current_date=current_date,current_day=current_day ,diaries=diaries)
 
 
 @dt.route("/images/<path:filename>")
