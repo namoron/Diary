@@ -1,0 +1,30 @@
+{% extends "detector/base.html" %}
+{% block content %}
+<!-- 画像アップロード画面へのリンクを追加する -->
+<div class="col-md-10 text-right dt-image-register-btn">
+    <a href="{{ url_for('detector.upload_image') }}" class="btn btn-primary">日記投稿</a>
+</div>
+<!-- 今日の年月日および曜日を表示する -->
+<div class="col-md-5">
+    <h2>日記一覧</h2>
+</div>
+<!-- 画像一覧を表示する -->
+{% for diary in diaries %}
+    {% if diary.UserImage.date %}
+        {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
+        <div class="card col-md-7 dt-image-content">
+            <header class="d-flex justify-content-between">
+                <!-- 日付を表示 (存在しない場合は表示しない) -->
+                <h2>{{ diary_date }}</h2>
+                <hr>
+            </header>
+            <div class="dt-image-text">
+                <p>{{ diary.UserImage.diary_text }}</p>
+            </div>
+            <section>
+                <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+            </section>
+        </div>
+    {% endif %}
+{% endfor %}
+{% endblock %}

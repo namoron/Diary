@@ -26,6 +26,7 @@ dt = Blueprint("detector", __name__, template_folder="templates")
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
+@login_required
 def index():
     #今日の日付
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -84,6 +85,25 @@ def upload_image():
 
         return redirect(url_for("detector.index"))
     return render_template("detector/upload.html", form=form)
+
+# dtアプリケーションを使ってエンドポイントを作成する
+@dt.route("/all")
+@login_required
+def all_diary():
+    #今日の日付
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    #今日の曜日
+    current_day = datetime.now().strftime('%a')
+    # UserとUserImageをJoinして画像一覧を取得する
+    # ソート順を日付が新しいものが先に来るように修正
+    diaries = (
+        db.session.query(User, UserImage)
+        .join(UserImage)
+        .filter(User.id == UserImage.user_id)
+        .order_by(desc(UserImage.date))  # ここで日付が新しいものが先に来るようにソート
+        .all()
+    )
+    return render_template("detector/all.html",current_date=current_date,current_day=current_day ,diaries=diaries)
 
 
 @dt.errorhandler(404)
