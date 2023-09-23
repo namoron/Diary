@@ -9,12 +9,14 @@ from apps.detector.forms import UploadDiaryForm
 from apps.detector.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
+    Flask,
     Blueprint,
     current_app,
     redirect,
     render_template,
     send_from_directory,
     url_for,
+    request,
 )
 
 # login_required, current_userをimportする
@@ -109,3 +111,24 @@ def all_diary():
 @dt.errorhandler(404)
 def page_not_found(e):
     return render_template("detector/404.html"),404
+
+# 検索ページと検索結果を表示するルート
+@dt.route("/search", methods=["GET", "POST"])
+@login_required
+def search_diary():
+    form = UploadDiaryForm()
+    if request.method == "POST":
+        search_term = request.form.get("search_term")
+        # SQLiteデータベースから日記を検索するクエリを実行
+        diaries = (
+            db.session.query(User, UserImage)
+            .join(UserImage)
+            .filter(User.id == UserImage.user_id)
+            .filter(UserImage.diary_text.like(f"%{search_term}%"))  # テキストを検索
+            .order_by(desc(UserImage.date))
+            .all()
+        )
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        current_day = datetime.now().strftime('%a')
+        return render_template("detector/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
+    return render_template("detector/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)

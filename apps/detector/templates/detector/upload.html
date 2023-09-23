@@ -5,6 +5,13 @@
     <form action="{{ url_for('detector.upload_image') }}" method="post" enctype="multipart/form-data"
     novalidate="novalidate">
     {{ form.csrf_token }}
+    <input type="date" min="2021-11-20" step="7">
+    <input type="date" list="data">
+    <datalist id="data">
+    <option value="2021-11-05"></option>
+    <option value="2021-11-10"></option>
+    <option value="2021-11-15"></option>
+    </datalist>
     <div>
         <label>
             <span> {{ form.date(class="form-control-file") }} </span>
