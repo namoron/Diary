@@ -44,8 +44,9 @@ def sort_diary():
 def index():
     # UserとUserImageをJoinして画像一覧を取得する
     # ソート順を日付が新しいものが先に来るように修正
+    form = UploadDiaryForm()
     diaries = sort_diary()
-    return render_template("detector/index.html",current_date=current_date,current_day=current_day ,diaries=diaries)
+    return render_template("detector/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
 
 
 @dt.route("/images/<path:filename>")
@@ -105,7 +106,7 @@ def page_not_found(e):
     return render_template("detector/404.html"),404
 
 # 検索ページと検索結果を表示するルート
-@dt.route("/search", methods=["GET", "POST"])
+@dt.route("/", methods=["GET", "POST"])
 @login_required
 def search_diary():
     form = UploadDiaryForm()
