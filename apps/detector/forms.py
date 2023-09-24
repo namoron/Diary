@@ -1,7 +1,8 @@
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from flask_wtf.form import FlaskForm
 from wtforms.fields.simple import SubmitField
-from wtforms import DateField,TextAreaField
+from wtforms import DateField,TextAreaField,StringField, SubmitField
+from wtforms.validators import DataRequired
 
 
 class UploadDiaryForm(FlaskForm):
@@ -16,3 +17,7 @@ class UploadDiaryForm(FlaskForm):
         ]
     )
     submit = SubmitField("アップロード")
+
+class SearchDiaryForm(FlaskForm):
+    search_term = StringField('Search Diary', validators=[DataRequired()])
+    submit = SubmitField('Search')

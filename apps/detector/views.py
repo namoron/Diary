@@ -5,7 +5,7 @@ from apps.app import db
 from apps.crud.models import User
 from sqlalchemy import desc  # 追加
 # UploadDiaryFormをimportする
-from apps.detector.forms import UploadDiaryForm
+from apps.detector.forms import UploadDiaryForm,SearchDiaryForm
 from apps.detector.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
@@ -108,7 +108,7 @@ def page_not_found(e):
 @dt.route("/search", methods=["GET", "POST"])
 @login_required
 def search_diary():
-    form = UploadDiaryForm()
+    form = SearchDiaryForm()
     if request.method == "POST":
         search_term = request.form.get("search_term")
         # SQLiteデータベースから日記を検索するクエリを実行
