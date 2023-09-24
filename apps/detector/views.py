@@ -105,6 +105,7 @@ def all_diary():
 def page_not_found(e):
     return render_template("detector/404.html"),404
 
+
 # 検索ページと検索結果を表示するルート
 @dt.route("/", methods=["GET", "POST"])
 @login_required
@@ -123,3 +124,17 @@ def search_diary():
         )
         return render_template("detector/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
     return render_template("detector/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
+
+# dtアプリケーションを使ってエンドポイントを作成する
+@dt.route("/edit/<string:date>", methods=["GET", "POST"])
+@login_required
+def edit_diary(date):
+    form = UploadDiaryForm()
+    diaries = (
+            db.session.query(User, UserImage)
+            .join(UserImage)
+            .filter(User.id == UserImage.user_id)
+            .filter(date == UserImage.date)
+            .all()
+        )
+    return render_template('detector/edit.html',diaries=diaries,form=form)

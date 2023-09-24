@@ -1,0 +1,51 @@
+{% extends "detector/base.html" %}
+{% block content %}
+<div>
+    <h4>投稿編集</h4>
+    <form action="{{ url_for('detector.upload_image') }}" method="post" enctype="multipart/form-data"
+    novalidate="novalidate">
+    {{ form.csrf_token }}
+    <input type="date" min="2021-11-20" step="7">
+    <input type="date" list="data">
+    <datalist id="data">
+    <option value="2021-11-05"></option>
+    <option value="2021-11-10"></option>
+    <option value="2021-11-15"></option>
+    </datalist>
+    {% for diary in diaries %}
+    <div>
+        <label>
+            <span> {{ form.date(class="form-control-file",value=diary.UserImage.date) }} </span>
+        </label>
+    </div>
+        <div>
+            <label>
+                <span> {{ form.image(class="form-control-file") }} </span>
+            </label>
+            <div class="card col-md-7 dt-image-content">
+            <section>
+                <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+            </section>
+            </div>
+        </div>
+
+        <div>
+            <label>
+                {% set f = form.diary_text.process_data(diary.UserImage.diary_text) %}
+                <span> {{ form.diary_text(class="form-control") }} </span>
+            </label>
+            {% for error in form.diary_text.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% for error in form.image.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <hr />
+        <div>
+            <label> {{ form.submit(class="btn btn-primary") }} </label>
+        </div>
+    </form>
+    {% endfor %}
+</div>
+{% endblock %}
