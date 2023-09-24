@@ -65,9 +65,9 @@ def upload_image():
         # アップロードされた画像ファイルを取得する
         file = form.image.data
 
-        # アップロードされた画像ファイル名から拡張子を取得
-        original_filename = secure_filename(file.filename)
-        ext = Path(original_filename).suffix
+        # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
+        ext = Path(file.filename).suffix
+        image_uuid_file_name = str(uuid.uuid4()) + ext
 
         # 日付データをフォームから取得
         date = form.date.data
@@ -75,16 +75,16 @@ def upload_image():
         # 日記の文章を取得する
         diary_text = form.diary_text.data
 
-        # 日付をファイル名に追加する（拡張子を含む）
-        formatted_date = date.strftime('%Y%m%d')
-        image_uuid_file_name = f"{formatted_date}{ext}"
+        # # 日付をファイル名に追加する（拡張子を含む）
+        # formatted_date = date.strftime('%Y%m%d')
+        # image_uuid_file_name = f"{formatted_date}{ext}"
 
         # 画像を保存する
         image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
         file.save(image_path)
 
         # DBに保存する
-        diary = UserImage(user_id=current_user.id, date=date, diary_text=diary_text, image_path=image_uuid_file_name)
+        diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date,diary_text=diary_text)
         db.session.add(diary)
         db.session.commit()
 
