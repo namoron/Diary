@@ -1,0 +1,52 @@
+{% extends "detector/base.html" %}
+{% block content %}
+    <h1>{{ date_year }}年の日記</h1>  <!-- 選択された年を表示 -->
+    <div id="table-container">
+        {% for year, year_months in diaries_by_year_and_month.items() %}
+            {% if year == date_year %}  <!-- 選択された年だけ表示 -->
+                <div class="year-table">
+                <table class="tablePage">
+                    <thead>
+                        <tr>
+                            <th width="40">Month</th>
+                            <th width="40">Date</th>
+                            <th width="300">Diary Text</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month, month_diaries in year_months.items() %}
+                            {% for diary in month_diaries %}
+                                <tr>
+                                    {% if loop.first %}
+                                        <td rowspan="{{ loop.length }}" style="text-align:center;">{{ month }}</td>
+                                    {% endif %}
+                                    <td style="text-align:center;">{{ diary.UserImage.date.strftime('/ %d') }}</td>
+                                    <td>{{ diary.UserImage.diary_text }}</td>
+                                    <td style="text-align:center;">
+                                        <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        <tr>
+                            <td colspan="5" style="text-align:right;">Total days in {{ year }}: {{ year_days[year] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <script>
+        // JavaScriptを使って年ごとのテーブルを配置する
+        const tableContainer = document.getElementById('table-container');
+        const yearTables = document.querySelectorAll('.year-table');
+
+        yearTables.forEach((table, index) => {
+            if (index > 0) {
+                table.style.display = 'block'; // 2番目以降のテーブルを非表示にする
+            }
+        });
+    </script>
+{% endblock %}
