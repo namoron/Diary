@@ -97,7 +97,7 @@ th {
 }
 tr:first-child {
   /* 最初の行の指定 */
-  border-bottom: 2px solid #c86b5b;
+  border-bottom: 1px solid #c86b5b;
 }
 tr:last-child {
   /* 最後の行の指定 */
