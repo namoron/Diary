@@ -1,0 +1,113 @@
+{% extends "detector/base.html" %}
+{% block content %}
+<style>
+    /* テーブルを横に並べるためのスタイル */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #table-container {
+        margin: -10%;
+        margin-left: -160%;
+        margin-right: -200%;
+        padding: -10%;
+        overflow-x: auto; /* 横スクロールを有効にする */
+        display: flex; /* テーブルコンテナを水平に並べる */
+        font-size:10px
+        -webkit-transform:scale(0.4);
+        transform:scale(0.4);
+
+    }
+
+    .year-table {
+        flex: 0 0 auto; /* テーブルが固定幅で横に並ぶようにする */
+        margin-right: 2px; /* テーブル間の間隔を調整 */
+        border: 1px solid #ccc; /* テーブルの境界線を追加 */
+        padding: 10px; /* テーブル内の余白を調整 */
+    }
+
+    /* テーブル内のスタイリング */
+    .tablePage {
+        width: 100%; /* テーブル幅を100%に設定 */
+        border-collapse: collapse; /* セルの境界線を結合 */
+    }
+
+    .tablePage th, .tablePage td {
+        border: 1px solid #ddd; /* セルの境界線を追加 */
+        padding: 8px; /* セル内の余白を調整 */
+    }
+
+    @media screen and (max-width:480px){
+        #table-container {
+            overflow-x: auto; /* 横スクロールを有効にする */
+            font-size: 10px;
+        }
+
+        .year-table {
+            margin-bottom: 20px; /* テーブル間の間隔を調整 */
+            border: 1px solid #ccc; /* テーブルの境界線を追加 */
+            padding: 10px; /* テーブル内の余白を調整 */
+        }
+
+        /* テーブル内のスタイリング */
+        .tablePage {
+            width: 100%; /* テーブル幅を100%に設定 */
+            border-collapse: collapse; /* セルの境界線を結合 */
+        }
+
+        .tablePage th, .tablePage td {
+            border: 1px solid #ddd; /* セルの境界線を追加 */
+            padding: 8px; /* セル内の余白を調整 */
+        }
+    }
+</style>
+    <h1>Htmlテーブルを動的に作成</h1>
+    <div id="table-container">
+        {% for year, year_months in diaries_by_year_and_month.items() %}
+            <div class="year-table">
+                <h2>{{ year }}</h2>
+                <table class="tablePage">
+                    <thead>
+                        <tr>
+                            <th width="40">Month</th>
+                            <th width="40">Date</th>
+                            <th width="300">Diary Text</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month, month_diaries in year_months.items() %}
+                            {% for diary in month_diaries %}
+                                <tr>
+                                    {% if loop.first %}
+                                        <td rowspan="{{ loop.length }}" style="text-align:center;">{{ month }}</td>
+                                    {% endif %}
+                                    <td style="text-align:center;">{{ diary.UserImage.date.strftime('/ %d') }}</td>
+                                    <td>{{ diary.UserImage.diary_text }}</td>
+                                    <td style="text-align:center;">
+                                        <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        <tr>
+                            <td colspan="5" style="text-align:right;">Total days in {{ year }}: {{ year_days[year] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // JavaScriptを使って年ごとのテーブルを配置する
+        const tableContainer = document.getElementById('table-container');
+        const yearTables = document.querySelectorAll('.year-table');
+
+        yearTables.forEach((table, index) => {
+            if (index > 0) {
+                table.style.display = 'block'; // 2番目以降のテーブルを非表示にする
+            }
+        });
+    </script>
+{% endblock %}

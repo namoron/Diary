@@ -3,7 +3,7 @@ from pathlib import Path
 from werkzeug.utils import secure_filename
 from apps.app import db
 from apps.crud.models import User
-from sqlalchemy import desc  # 追加
+from sqlalchemy import desc, asc
 # UploadDiaryFormをimportする
 from apps.detector.forms import UploadDiaryForm,SearchDiaryForm
 from apps.detector.models import UserImage
@@ -37,6 +37,18 @@ def sort_diary():
         .all()
     )
     return diaries
+
+def sort_diary_ascending():
+    diaries = (
+        db.session.query(User, UserImage)
+        .join(UserImage)
+        .filter(User.id == UserImage.user_id)
+        .order_by(asc(UserImage.date))  # ここで日付が昇順にソート
+        .all()
+    )
+    return diaries
+
+
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
@@ -138,3 +150,38 @@ def edit_diary(date):
             .all()
         )
     return render_template('detector/edit.html',diaries=diaries,form=form)
+
+# dtアプリケーションを使ってエンドポイントを作成する
+@dt.route("/full")
+@login_required
+def full_diary():
+    # UserとUserImageをJoinして画像一覧を取得し、ソート
+    diaries = sort_diary_ascending()
+    
+    # 年ごと、月ごとに日記をグループ化した辞書を作成
+    diaries_by_year_and_month = {}
+    for diary in diaries:
+        year = diary.UserImage.date.year
+        month = diary.UserImage.date.month
+        if year not in diaries_by_year_and_month:
+            diaries_by_year_and_month[year] = {}
+        if month not in diaries_by_year_and_month[year]:
+            diaries_by_year_and_month[year][month] = []
+        diaries_by_year_and_month[year][month].append(diary)
+
+    # 年ごとの日数を計算し、テンプレートに渡す
+    year_days = {}
+    for year, months in diaries_by_year_and_month.items():
+        total_days = 0
+        for month, diaries in months.items():
+            # 各月の日数を計算して合計に加える
+            total_days += len(diaries)
+        year_days[year] = total_days
+
+    return render_template("detector/full.html", current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+
+# dtアプリケーションを使ってエンドポイントを作成する
+@dt.route("/table/<string:date.year>", methods=["GET", "POST"])
+@login_required
+def etable_diary(date):
+    return render_template('detector/tabel.html',diaries=diaries,form=form)

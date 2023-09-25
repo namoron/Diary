@@ -77,3 +77,37 @@ input[type="search"] {
 .dt-image-submit {
   margin-left: 10px;
 }
+.tablePage {
+  font-size: 1px;
+}
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  /* 各セルの指定 */
+  padding: 5px 5px;
+  border-bottom: 1px solid #c86b5b;
+  border-right: 1px dotted #c86b5b;
+}
+th {
+  /* 表の見出しの指定 */
+  color: #c86b5b;
+  text-align: center;
+}
+tr:first-child {
+  /* 最初の行の指定 */
+  border-bottom: 2px solid #c86b5b;
+}
+tr:last-child {
+  /* 最後の行の指定 */
+  border-bottom: 4px solid #c86b5b;
+}
+td:last-child {
+  /* 一番左の列の指定 */
+  border-right: 0;
+}
+th:last-child {
+  /* 一番右の列の指定 */
+  border-right: 0;
+}
