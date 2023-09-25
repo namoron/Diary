@@ -4,7 +4,7 @@ import shutil
 import pytest
 from apps.app import create_app, db
 from apps.crud.models import User
-from apps.detector.models import UserImage, UserImageTag
+from apps.diary.models import UserImage, UserImageTag
 
 
 # フィクスチャ関数を作成する

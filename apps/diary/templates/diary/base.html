@@ -13,7 +13,7 @@
     <!-- ナビゲーションバーを作成する -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand " href="{{ url_for('detector.index') }}">10 Year's Diary</a>
+            <a class="navbar-brand " href="{{ url_for('diary.index') }}">10 Year's Diary</a>
             <ul class="navbar-nav">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">

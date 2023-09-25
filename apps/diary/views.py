@@ -5,8 +5,8 @@ from apps.app import db
 from apps.crud.models import User
 from sqlalchemy import desc, asc
 # UploadDiaryFormをimportする
-from apps.detector.forms import UploadDiaryForm,SearchDiaryForm
-from apps.detector.models import UserImage
+from apps.diary.forms import UploadDiaryForm,SearchDiaryForm
+from apps.diary.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
     Flask,
@@ -23,7 +23,7 @@ from flask import (
 from flask_login import current_user, login_required
 
 # template_folderを指定する（staticは指定しない）
-dt = Blueprint("detector", __name__, template_folder="templates")
+dt = Blueprint("diary", __name__, template_folder="templates")
 #今日の日付
 current_date = datetime.now().strftime('%Y-%m-%d')
 #今日の曜日
@@ -58,7 +58,7 @@ def index():
     # ソート順を日付が新しいものが先に来るように修正
     form = UploadDiaryForm()
     diaries = sort_diary()
-    return render_template("detector/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
+    return render_template("diary/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
 
 
 @dt.route("/images/<path:filename>")
@@ -100,8 +100,8 @@ def upload_image():
         db.session.add(diary)
         db.session.commit()
 
-        return redirect(url_for("detector.index"))
-    return render_template("detector/upload.html", form=form)
+        return redirect(url_for("diary.index"))
+    return render_template("diary/upload.html", form=form)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/all")
@@ -110,12 +110,12 @@ def all_diary():
     # UserとUserImageをJoinして画像一覧を取得する
     # ソート順を日付が新しいものが先に来るように修正
     diaries = sort_diary()
-    return render_template("detector/all.html",current_date=current_date,current_day=current_day ,diaries=diaries)
+    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,diaries=diaries)
 
 
 @dt.errorhandler(404)
 def page_not_found(e):
-    return render_template("detector/404.html"),404
+    return render_template("diary/404.html"),404
 
 
 # 検索ページと検索結果を表示するルート
@@ -134,8 +134,8 @@ def search_diary():
             .order_by(desc(UserImage.date))
             .all()
         )
-        return render_template("detector/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
-    return render_template("detector/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
+        return render_template("diary/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
+    return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/edit/<string:date>", methods=["GET", "POST"])
@@ -149,7 +149,7 @@ def edit_diary(date):
             .filter(date == UserImage.date)
             .all()
         )
-    return render_template('detector/edit.html',diaries=diaries,form=form)
+    return render_template('diary/edit.html',diaries=diaries,form=form)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/full")
@@ -178,7 +178,7 @@ def full_diary():
             total_days += len(diaries)
         year_days[year] = total_days
 
-    return render_template("detector/full.html", current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+    return render_template("diary/full.html", current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/table/<int:date_year>")
@@ -206,4 +206,4 @@ def table_diary(date_year):
             # 各月の日数を計算して合計に加える
             total_days += len(diaries)
         year_days[year] = total_days
-    return render_template('detector/table.html',date_year=date_year, current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+    return render_template('diary/table.html',date_year=date_year, current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)

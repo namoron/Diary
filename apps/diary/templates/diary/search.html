@@ -1,4 +1,4 @@
-{% extends "detector/base.html" %}
+{% extends "diary/base.html" %}
 {% block content %}
 <h1>日記検索</h1>
 <form method="POST">
@@ -22,7 +22,7 @@
                 <p>{{ diary.UserImage.diary_text }}</p>
             </div>
             <section>
-                <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
             </section>
         </div>
     {% endif %}

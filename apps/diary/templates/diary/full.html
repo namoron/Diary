@@ -1,4 +1,4 @@
-{% extends "detector/base.html" %}
+{% extends "diary/base.html" %}
 {% block content %}
 <style>
     /* テーブルを横に並べるためのスタイル */
@@ -84,7 +84,7 @@
                                     <td style="text-align:center;">{{ diary.UserImage.date.strftime('/ %d') }}</td>
                                     <td>{{ diary.UserImage.diary_text }}</td>
                                     <td style="text-align:center;">
-                                        <img src="{{ url_for('detector.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                        <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
                                     </td>
                                 </tr>
                             {% endfor %}

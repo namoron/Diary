@@ -47,8 +47,8 @@ def create_app(config_key):
     app.register_error_handler(404,page_not_found)
     app.register_error_handler(500,internal_server_error)
 
-    # これから作成するdetectorパッケージからviewsをimportする
-    from apps.detector import views as dt_views
+    # これから作成するdiaryパッケージからviewsをimportする
+    from apps.diary import views as dt_views
 
     # register_blueprintを使いviewsのdtをアプリへ登録する
     app.register_blueprint(dt_views.dt)
