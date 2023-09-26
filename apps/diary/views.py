@@ -138,20 +138,6 @@ def search_diary():
     return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
 # dtアプリケーションを使ってエンドポイントを作成する
-@dt.route("/edit/<string:date>", methods=["GET", "POST"])
-@login_required
-def edit_diary(date):
-    form = UploadDiaryForm()
-    diaries = (
-            db.session.query(User, UserImage)
-            .join(UserImage)
-            .filter(User.id == UserImage.user_id)
-            .filter(date == UserImage.date)
-            .all()
-        )
-    return render_template('diary/edit.html',diaries=diaries,form=form)
-
-# dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/full")
 @login_required
 def full_diary():
@@ -207,3 +193,17 @@ def table_diary(date_year):
             total_days += len(diaries)
         year_days[year] = total_days
     return render_template('diary/table.html',date_year=date_year, current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+
+@dt.route("/diaries/<string:date>")
+@login_required
+def view_diaries(date):
+    target_date = datetime.strptime(date, "%Y-%m-%d").date()  # 文字列から日付オブジェクトに変換
+    diary = (
+            db.session.query(User, UserImage)
+            .join(UserImage)
+            .filter(User.id == UserImage.user_id)
+            .filter(target_date == UserImage.date)
+            .order_by(desc(UserImage.date))
+            .first()
+        )
+    return render_template('diary/single.html',diary=diary)
