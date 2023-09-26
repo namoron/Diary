@@ -5,7 +5,7 @@ from apps.app import db
 from apps.crud.models import User
 from sqlalchemy import desc, asc
 # UploadDiaryFormをimportする
-from apps.diary.forms import UploadDiaryForm,SearchDiaryForm
+from apps.diary.forms import UploadDiaryForm,UpdateDiaryForm,SearchDiaryForm
 from apps.diary.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
 from flask import (
@@ -17,6 +17,7 @@ from flask import (
     send_from_directory,
     url_for,
     request,
+    flash
 )
 
 # login_required, current_userをimportする
@@ -108,7 +109,7 @@ def upload_image():
 @login_required
 def all_diary():
     # UserとUserImageをJoinして画像一覧を取得する
-    # ソート順を日付が新しいものが先に来るように修正
+    # ソート順を日付が新    しいものが先に来るように修正
     diaries = sort_diary()
     return render_template("diary/all.html",current_date=current_date,current_day=current_day ,diaries=diaries)
 
@@ -207,3 +208,36 @@ def view_diaries(date):
             .first()
         )
     return render_template('diary/single.html',diary=diary)
+
+
+@dt.route("/diaries/<string:date>/edit", methods=["GET", "POST"])
+@login_required
+def edit_diary(date):
+    target_date = datetime.strptime(date, "%Y-%m-%d").date()
+
+    form = UpdateDiaryForm()
+
+    # GETリクエストの場合、データベースから日記データを取得
+    diary = (
+        db.session.query(User, UserImage)
+        .join(UserImage)
+        .filter(User.id == UserImage.user_id)
+        .filter(target_date == UserImage.date)
+        .first()
+    )
+    if request.method == 'POST':
+        # フォームから新しいテキストと日付を取得
+        new_diary_text = form.diary_text.data
+        new_date = form.date.data
+    
+        # 日記の属性を更新
+        diary.UserImage.diary_text = new_diary_text
+        diary.UserImage.date = new_date
+    
+        # データベースを更新
+        db.session.commit()
+    
+        return redirect(url_for('diary.all_diary'))  # 日記一覧ページにリダイレクト
+    
+
+    return render_template('diary/edit.html', diary=diary, form=form)  # 日記編集フォームを表示

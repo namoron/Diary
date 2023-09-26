@@ -2,50 +2,39 @@
 {% block content %}
 <div>
     <h4>投稿編集</h4>
-    <form action="{{ url_for('diary.upload_image') }}" method="post" enctype="multipart/form-data"
+    <form action="{{ url_for('diary.edit_diary', date=diary.UserImage.date) }}" method="post" enctype="multipart/form-data"
     novalidate="novalidate">
     {{ form.csrf_token }}
-    <input type="date" min="2021-11-20" step="7">
-    <input type="date" list="data">
-    <datalist id="data">
-    <option value="2021-11-05"></option>
-    <option value="2021-11-10"></option>
-    <option value="2021-11-15"></option>
-    </datalist>
-    {% for diary in diaries %}
     <div>
-        <label>
-            <span> {{ form.date(class="form-control-file",value=diary.UserImage.date) }} </span>
-        </label>
+        <label for="date">日付</label>
+        {{ form.date(class="form-control", id="date",value=diary.UserImage.date) }}
+        <datalist id="data">
+            <option value="2021-11-05"></option>
+            <option value="2021-11-10"></option>
+            <option value="2021-11-15"></option>
+        </datalist>
     </div>
-        <div>
-            <label>
-                <span> {{ form.image(class="form-control-file") }} </span>
-            </label>
-            <div class="card col-md-7 dt-image-content">
+    <div>
+        <div class="card col-md-7 dt-image-content">
             <section>
                 <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
             </section>
-            </div>
         </div>
-
-        <div>
-            <label>
-                {% set f = form.diary_text.process_data(diary.UserImage.diary_text) %}
-                <span> {{ form.diary_text(class="form-control") }} </span>
-            </label>
-            {% for error in form.diary_text.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        {% for error in form.image.errors %}
+    </div>
+    <div>
+        <label for="diary_text">日記の文章</label>
+        <label>
+            {% set f = form.diary_text.process_data(diary.UserImage.diary_text) %}
+            <span> {{ form.diary_text(class="form-control") }} </span>
+        </label>
+        {% for error in form.diary_text.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
-        <hr />
-        <div>
-            <label> {{ form.submit(class="btn btn-primary") }} </label>
-        </div>
+    </div>
+    <hr />
+    <div>
+        <label>{{ form.submit(class="btn btn-primary") }}</label>
+    </div>
     </form>
-    {% endfor %}
 </div>
 {% endblock %}
