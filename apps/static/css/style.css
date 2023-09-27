@@ -1,9 +1,3 @@
-body {
-  background-color: #f5f5f5;
-}
-h4 {
-  margin-top: 20px;
-}
 input[type="search"] {
   background-color: #f5f5f5;
 }
@@ -62,8 +56,8 @@ input[type="search"] {
   padding: 10px 10px 0 10px;
 }
 .dt-image-content section {
-  padding: 10px 0;
   margin: auto;
+  padding: 10px 0;
 }
 .dt-image-content footer {
   padding: 10px;
@@ -110,4 +104,56 @@ td:last-child {
 th:last-child {
   /* 一番右の列の指定 */
   border-right: 0;
+}
+
+@media (max-width: 992px) {
+  /*==================================================
+　5-2-2 2本線が×に
+===================================*/
+
+  /*ボタン外側※レイアウトによってpositionや形状は適宜変更してください*/
+  .openbtn2 {
+    position: relative; /*ボタン内側の基点となるためrelativeを指定*/
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    /* background: #fff; */
+  }
+
+  /*ボタン内側*/
+
+  .openbtn2 span {
+    display: inline-block;
+    transition: all 0.4s; /*アニメーションの設定*/
+    position: absolute;
+    left: 16px;
+    height: 2px;
+    background-color: #666;
+  }
+
+  .openbtn2 span:nth-of-type(1) {
+    top: 22px;
+    width: 35%;
+  }
+
+  .openbtn2 span:nth-of-type(2) {
+    top: 29px;
+    width: 35%;
+  }
+
+  /*activeクラスが付与されると線が回転して×に*/
+
+  .openbtn2.active span:nth-of-type(1) {
+    top: 20px;
+    left: 16px;
+    transform: translateY(6px) rotate(-45deg);
+    width: 35%;
+  }
+
+  .openbtn2.active span:nth-of-type(2) {
+    top: 32px;
+    left: 16px;
+    transform: translateY(-6px) rotate(45deg);
+    width: 35%;
+  }
 }

@@ -11,40 +11,47 @@
 
 <body>
     <!-- ナビゲーションバーを作成する -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand " href="{{ url_for('diary.index') }}">10 Year's Diary</a>
-            <ul class="navbar-nav">
-                {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <span class="nav-link">{{ current_user.username }}</span>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('auth.logout') }}" class="nav-link">ログアウト</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.signup') }}">
-                        新規登録</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">
-                        ログイン</a>
-                </li>
-                {% endif %}
-            </ul>
+                <a class="navbar-brand " href="{{ url_for('diary.index') }}">10 Year's Diary</a>
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">{{ current_user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.logout') }}" class="nav-link">ログアウト</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.signup') }}">新規登録</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">ログイン</a>
+                    </li>
+                    {% endif %}
+                </ul>
         </div>
+        <div class="openbtn2"><span></span><span></span></div>
     </nav>
 
-    <!-- block contentをsection class="container"で囲む -->
-    <section class="container">
-        {% block content %}{% endblock %}
-    </section>
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2023 10 Year's Diary. All rights reserved.</p>
-        </div>
-    </footer>
+            <!-- block contentをsection class="container"で囲む -->
+            <section class="container">
+                {% block content %}{% endblock %}
+            </section>
+            <footer class="footer">
+                <div class="container">
+                    <p>&copy; 2023 10 Year's Diary. All rights reserved.</p>
+                </div>
+            </footer>
+
+    <!-- JavaScript for the hamburger menu -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">  </script>
+    <script>
+        $(".openbtn2").click(function () {
+            $(this).toggleClass('active');
+        });
+    </script>
 </body>
 
 </html>
