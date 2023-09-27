@@ -233,11 +233,24 @@ def edit_diary(date):
         # 日記の属性を更新
         diary.UserImage.diary_text = new_diary_text
         diary.UserImage.date = new_date
-    
+
+        # アップロードされた画像ファイルを取得する
+        file = form.image.data
+
+        # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
+        ext = Path(file.filename).suffix
+        image_uuid_file_name = str(uuid.uuid4()) + ext
+
+        # 画像を保存する
+        image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
+        file.save(image_path)
+
+        diary.UserImage.image_path = image_uuid_file_name
+
         # データベースを更新
         db.session.commit()
     
-        return redirect(url_for('diary.all_diary'))  # 日記一覧ページにリダイレクト
+        return redirect(url_for('diary.view_diaries', date=new_date)) # 日記一覧ページにリダイレクト
     
 
     return render_template('diary/edit.html', diary=diary, form=form)  # 日記編集フォームを表示

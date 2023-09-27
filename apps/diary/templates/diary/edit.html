@@ -15,6 +15,11 @@
         </datalist>
     </div>
     <div>
+        <div>
+            <label>
+                <span> {{ form.image(class="form-control-file",id="image") }} </span>
+            </label>
+        </div>
         <div class="card col-md-7 dt-image-content">
             <section>
                 <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
