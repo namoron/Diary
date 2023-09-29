@@ -43,10 +43,32 @@
             </div>
         </div>
     </nav>
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#">リンク1</a></li>
+            <li><a href="#">リンク2</a></li>
+            <li><a href="#">リンク3</a></li>
+        </ul>
+    </aside>
     <!-- block contentをsection class="container"で囲む -->
     <section class="container">
         {% block content %}{% endblock %}
     </section>
+    <!-- サブナビゲーション -->
+    <nav class="sub-navbar">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">サブメニュー1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">サブメニュー2</a>
+                </li>
+                <!-- 他のサブメニューアイテムを追加 -->
+            </ul>
+        </div>
+    </nav>
+
     <footer class="footer">
         <div class="container">
             <p>&copy; 2023 10 Year's Diary. All rights reserved.</p>
