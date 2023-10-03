@@ -154,3 +154,158 @@ th:last-child {
   padding: 10px 20px;
   text-decoration: none;
 }
+.nav-user {
+  display: block;
+  padding: 0.5rem 1rem;
+}
+#nav-auth {
+  position: relative;
+}
+#nav-auth::after {
+  opacity: 0;
+  transition: all 0.2s;
+}
+#nav-auth:hover::after {
+  content: "";
+  opacity: 1;
+  height: 2px;
+  width: 100%;
+  background-color: #9c1a1c;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.search {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 3em auto 2em auto;
+  padding: 1em;
+  justify-content: space-between;
+  background-color: #fafafc;
+  border: 1px solid #c4c4c4;
+  box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04),
+    0 6px 22px 4px rgba(7, 48, 114, 0.12),
+    0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
+  border-radius: 50px;
+  min-width: 300px; /* Set a minimum width here */
+  max-width: 800px;
+}
+
+#diary-search {
+  margin-bottom: 0;
+  margin-left: 1em;
+  margin-right: 2em;
+}
+/* 検索ボックスのスタイル */
+.search > form {
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 576px) {
+  .search > form {
+    align-items: center;
+    justify-content: center;
+    margin-right: 2em;
+  }
+}
+
+/* テキスト入力フィールドのスタイル */
+input[type="text"] {
+  padding: 5px;
+  border: 2px solid #0069d9; /* ボーダーの色 */
+  border-radius: 5px; /* 角丸 */
+  outline: none; /* フォーカス時の枠線を削除 */
+  transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
+  width: 70%; /* 幅を調整 */
+  min-width: 100px;
+}
+
+/* テキスト入力フィールドのフォーカス時のスタイル */
+input[type="text"]:focus {
+  border-color: #e74c3c; /* フォーカス時のボーダーの色 */
+}
+/* テキスト入力フィールドのスタイル */
+input[type="password"] {
+  padding: 5px;
+  border: 2px solid #0069d9; /* ボーダーの色 */
+  border-radius: 5px; /* 角丸 */
+  outline: none; /* フォーカス時の枠線を削除 */
+  transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
+  width: 300px; /* 幅を調整 */
+}
+
+/* テキスト入力フィールドのフォーカス時のスタイル */
+input[type="password"]:focus {
+  border-color: #e74c3c; /* フォーカス時のボーダーの色 */
+}
+
+/* サブミットボタンのスタイル */
+input[type="submit"] {
+  background-color: #0069d9; /* ボタンの背景色 */
+  color: white; /* ボタンのテキスト色 */
+  padding: 7px 15px;
+  border: none;
+  border-radius: 5px; /* 角丸 */
+  cursor: pointer;
+  transition: background-color 0.3s; /* 背景色が変化するアニメーション */
+  font-size: 16px;
+}
+
+/* サブミットボタンのホバー時のスタイル */
+input[type="submit"]:hover {
+  background-color: #2980b9; /* ホバー時の背景色 */
+}
+
+#diary-upload {
+  /* margin: 3em 0 0 auto; */
+  position: fixed;
+  bottom: 8%;
+  right: 0;
+  width: 20%;
+  min-width: 150px;
+  padding-right: 5%;
+  z-index: 3;
+}
+#diary-upload > a {
+  height: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#diary-post {
+  border-radius: 10px;
+}
+#diaryAll {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#diaryAll > section {
+  padding: 5px 5px 5px 5px;
+}
+#diaryAll > section > img {
+  border-radius: 5px;
+}
+#allImagetext > p {
+  margin: 0%;
+  padding: 0 10px 0 10px;
+}
+@media (max-width: 576px) {
+  #diaryAll {
+    width: 40%;
+  }
+  #diaryAll > header {
+    height: 25px;
+    padding-top: 5px;
+  }
+  #allImagetext > p {
+    font-size: x-small;
+  }
+  #allDate {
+    font-size: medium;
+    margin: 0%;
+  }
+}

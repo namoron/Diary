@@ -1,29 +1,33 @@
 {% extends "diary/base.html" %}
 {% block content %}
-<!-- 画像アップロード画面へのリンクを追加する -->
-<div class="col-md-10 text-right dt-image-register-btn">
-    <a href="{{ url_for('diary.upload_image') }}" class="btn btn-primary">日記投稿</a>
+
+<div class="search">
+    <h5 class="d-flex align-items-center" id="diary-search">日記検索</h5>
+    <form method="POST">
+        {{ form.csrf_token }}
+        <input type="text" name="search_term"  required="required" placeholder="検索キーワード">
+        <input type="submit" value="検索">
+    </form>
 </div>
-<h1>日記検索</h1>
-<form method="POST">
-    {{ form.csrf_token }}
-    <input type="text" name="search_term"  required="required" placeholder="検索キーワード">
-    <input type="submit" value="検索">
-</form>
+<!-- 画像アップロード画面へのリンクを追加する -->
+<div class="col-md-3 dt-image-register-btn" id="diary-upload">
+    <a href="{{ url_for('diary.upload_image') }}" class="btn btn-primary " >日記投稿</a>
+</div>
 <!-- 今日の年月日および曜日を表示する -->
 <div class="col-md-5">
-    <h2>Today: {{ current_date }}({{ current_day }})</h2>
+    <h4 id="today">Today: {{ current_date }}({{ current_day }})</h4>
 </div>
+
 <!-- 画像一覧を表示する -->
 {% for diary in diaries %}
     {% if diary.UserImage.date %}
         {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
         {% if diary_date[-5:] == current_date[-5:] %}
             <!-- 年月日の後半（月日部分）が一致する場合に表示 -->
-            <div class="card col-md-7 dt-image-content">
+            <div class="card col-md-7 dt-image-content" id="diary-post">
                 <header class="d-flex justify-content-between">
                     <!-- 日付を表示 (存在しない場合は表示しない) -->
-                    <h2>{{ diary_date }}</h2>
+                    <h4>{{ diary_date }}</h4>
                     <hr>
                 </header>
                 <div class="dt-image-text">
@@ -36,4 +40,5 @@
         {% endif %}
     {% endif %}
 {% endfor %}
+
 {% endblock %}

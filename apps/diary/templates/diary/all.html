@@ -1,25 +1,25 @@
 {% extends "diary/base.html" %}
 {% block content %}
 <!-- 画像アップロード画面へのリンクを追加する -->
-<div class="col-md-10 text-right dt-image-register-btn">
-    <a href="{{ url_for('diary.upload_image') }}" class="btn btn-primary">日記投稿</a>
+<div class="col-md-3 dt-image-register-btn" id="diary-upload">
+    <a href="{{ url_for('diary.upload_image') }}" class="btn btn-primary " >日記投稿</a>
 </div>
 <!-- 今日の年月日および曜日を表示する -->
 <div class="col-md-5">
-    <h2>日記一覧</h2>
+    <h3>日記一覧</h3>
 </div>
 <!-- 画像一覧を表示する -->
 {% for diary in diaries %}
     {% if diary.UserImage.date %}
         {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
-        <div class="card col-md-7 dt-image-content">
-            <header class="d-flex justify-content-between">
+        <div class="card col-md-3  dt-image-content" id="diaryAll">
+            <header class="d-flex justify-content-between" >
                 <!-- 日付を表示 (存在しない場合は表示しない) -->
-                <h2>{{ diary_date }}</h2>
-                <h  r>
+                <h4 id="allDate">{{ diary_date }}</h4>
+                <hr/>
             </header>
-            <div class="dt-image-text">
-                <p>{{ diary.UserImage.diary_text }}</p>
+            <div class="dt-image-text" id="allImagetext">
+                <p >{{ diary.UserImage.diary_text }}</p>
             </div>
             <section>
                 <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
