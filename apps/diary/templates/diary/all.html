@@ -9,6 +9,7 @@
     <h3>日記一覧</h3>
 </div>
 <!-- 画像一覧を表示する -->
+<div class="row">
 {% for diary in diaries %}
     {% if diary.UserImage.date %}
         {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
@@ -21,10 +22,15 @@
             <div class="dt-image-text" id="allImagetext">
                 <p >{{ diary.UserImage.diary_text }}</p>
             </div>
+            <div class="col-md-3 dt-image-register-btn" id="diary-edit">
+                <a href="{{ url_for('diary.edit_diary', date=diary_date) }}" class="btn btn-primary">日記編集</a>
+            </div>
+
             <section>
                 <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
             </section>
         </div>
     {% endif %}
 {% endfor %}
+</div>
 {% endblock %}

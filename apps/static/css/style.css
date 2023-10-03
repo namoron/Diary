@@ -280,8 +280,7 @@ input[type="submit"]:hover {
   border-radius: 10px;
 }
 #diaryAll {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px auto;
 }
 #diaryAll > section {
   padding: 5px 5px 5px 5px;
@@ -293,19 +292,20 @@ input[type="submit"]:hover {
   margin: 0%;
   padding: 0 10px 0 10px;
 }
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   #diaryAll {
     width: 40%;
+    margin: 10px auto;
   }
   #diaryAll > header {
     height: 25px;
     padding-top: 5px;
   }
   #allImagetext > p {
-    font-size: x-small;
+    font-size: xx-small;
   }
   #allDate {
-    font-size: medium;
+    font-size: small;
     margin: 0%;
   }
 }

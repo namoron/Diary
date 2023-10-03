@@ -111,7 +111,8 @@ def all_diary():
     # UserとUserImageをJoinして画像一覧を取得する
     # ソート順を日付が新    しいものが先に来るように修正
     diaries = sort_diary()
-    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,diaries=diaries)
+    length = len(diaries)
+    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,diaries=diaries,length=length)
 
 
 @dt.errorhandler(404)
