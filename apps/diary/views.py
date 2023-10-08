@@ -8,6 +8,7 @@ from sqlalchemy import desc, asc
 from apps.diary.forms import UploadDiaryForm,UpdateDiaryForm,SearchDiaryForm
 from apps.diary.models import UserImage
 from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
+from flask_paginate import Pagination, get_page_parameter
 from flask import (
     Flask,
     Blueprint,
@@ -120,7 +121,18 @@ def all_diary():
     # ソート順を日付が新    しいものが先に来るように修正
     diaries = sort_diary()
     length = len(diaries)
-    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,diaries=diaries,length=length)
+    # ページネーション
+    ## 現在のページ番号を取得
+    page = int(request.args.get(get_page_parameter(), 1))
+    ## ページごとの表示件数
+    per_page = 12
+    ## ページネーションオブジェクトを作成
+    pagination = Pagination(page=page, per_page=per_page, total=length)
+    # 表示するデータを取得
+    start = (page - 1) * per_page
+    end = start + per_page
+    displayed_menu = diaries[start:end]
+    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,length=length, diaries=displayed_menu, pagination=pagination)
 
 
 @dt.errorhandler(404)

@@ -13,7 +13,7 @@
 {% for diary in diaries %}
     {% if diary.UserImage.date %}
         {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
-        <div class="card col-md-2  dt-image-content" id="diaryAll">
+        <div class="card col-lg-2  dt-image-content" id="diaryAll">
             <header class="d-flex justify-content-between" >
                 <!-- 日付を表示 (存在しない場合は表示しない) -->
                 <h6 id="allDate">{{ diary_date }}</h6>
@@ -31,7 +31,12 @@
         </div>
     {% endif %}
 {% endfor %}
-
-
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            {{ pagination.links }}
+        </div>
+    </div>
 </div>
 {% endblock %}
