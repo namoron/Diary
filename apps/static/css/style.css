@@ -219,7 +219,7 @@ input[type="text"] {
   border-radius: 5px; /* 角丸 */
   outline: none; /* フォーカス時の枠線を削除 */
   transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
-  width: 70%; /* 幅を調整 */
+  width: 300px; /* 幅を調整 */
   min-width: 100px;
 }
 
@@ -280,10 +280,31 @@ input[type="submit"]:hover {
   border-radius: 10px;
 }
 #diaryAll {
-  margin: 10px auto;
+  position: relative;
+  transition: all 0.2s;
+  margin: 10px 0px;
+}
+#diaryAll {
+  position: relative;
+  transition: all 0.2s;
+  margin: 10px 0px;
+}
+#diaryAll > header {
+  margin: 0%;
 }
 #diaryAll > section {
   padding: 5px 5px 5px 5px;
+}
+#diaryAll > a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#diaryAll:hover {
+  cursor: pointer;
+  background: #ffd700;
 }
 #diaryAll > section > img {
   border-radius: 5px;
@@ -292,7 +313,7 @@ input[type="submit"]:hover {
   margin: 0%;
   padding: 0 10px 0 10px;
 }
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   #diaryAll {
     width: 40%;
     margin: 10px auto;
@@ -303,9 +324,5 @@ input[type="submit"]:hover {
   }
   #allImagetext > p {
     font-size: xx-small;
-  }
-  #allDate {
-    font-size: small;
-    margin: 0%;
   }
 }

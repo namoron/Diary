@@ -37,6 +37,10 @@ def sort_diary():
         .order_by(desc(UserImage.date))  # ここで日付が新しいものが先に来るようにソート
         .all()
     )
+     # 日記データに曜日を追加
+    for diary in diaries:
+        if diary.UserImage.date:
+            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
     return diaries
 
 def sort_diary_ascending():
@@ -47,6 +51,10 @@ def sort_diary_ascending():
         .order_by(asc(UserImage.date))  # ここで日付が昇順にソート
         .all()
     )
+     # 日記データに曜日を追加
+    for diary in diaries:
+        if diary.UserImage.date:
+            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
     return diaries
 
 
@@ -140,7 +148,7 @@ def search_diary():
     return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
 # dtアプリケーションを使ってエンドポイントを作成する
-@dt.route("/full")
+@dt.route("/table/full")
 @login_required
 def full_diary():
     # UserとUserImageをJoinして画像一覧を取得し、ソート
@@ -237,17 +245,17 @@ def edit_diary(date):
 
         # アップロードされた画像ファイルを取得する
         file = form.image.data
+        if file:
+            # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
+            ext = Path(file.filename).suffix
+            image_uuid_file_name = str(uuid.uuid4()) + ext
 
-        # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
-        ext = Path(file.filename).suffix
-        image_uuid_file_name = str(uuid.uuid4()) + ext
+            # 画像を保存する
+            image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
+            file.save(image_path)
 
-        # 画像を保存する
-        image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
-        file.save(image_path)
-
-        diary.UserImage.image_path = image_uuid_file_name
-
+            diary.UserImage.image_path = image_uuid_file_name
+        
         # データベースを更新
         db.session.commit()
     
