@@ -17,7 +17,15 @@
             <header class="d-flex justify-content-between" >
                 <!-- 日付を表示 (存在しない場合は表示しない) -->
                 <h6 id="allDate">{{ diary_date }}</h6>
-                <h6 id="allDay">({{ diary.UserImage.day_of_week }})</h6> <!-- 曜日を表示 -->
+                <h6 class="allDay">(</h6>
+                {% if diary.UserImage.day_of_week == 'Sat' %}
+                    <h6 class="allDaySaturday">{{ diary.UserImage.day_of_week }}</h6> <!-- 曜日を表示 -->
+                {% elif diary.UserImage.day_of_week == 'Sun' %}
+                    <h6 class="allDaySunday">{{ diary.UserImage.day_of_week }}</h6> <!-- 曜日を表示 -->
+                {% else %}
+                    <h6 class="allDay">{{ diary.UserImage.day_of_week }}</h6> <!-- 曜日を表示 -->
+                {% endif %}
+                <h6 class="allDay">)</h6>
                 <hr/>
             </header>
             <div class="dt-image-text" id="allImagetext">

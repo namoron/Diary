@@ -7,7 +7,7 @@ from sqlalchemy import desc, asc
 # UploadDiaryFormをimportする
 from apps.diary.forms import UploadDiaryForm,UpdateDiaryForm,SearchDiaryForm
 from apps.diary.models import UserImage
-from datetime import datetime  # 日付フィールドを扱うためにdatetimeモジュールをインポート
+from datetime import datetime, timedelta
 from flask_paginate import Pagination, get_page_parameter
 from flask import (
     Flask,
@@ -30,6 +30,7 @@ dt = Blueprint("diary", __name__, template_folder="templates")
 current_date = datetime.now().strftime('%Y-%m-%d')
 #今日の曜日
 current_day = datetime.now().strftime('%a')
+
 def sort_diary():
     diaries = (
         db.session.query(User, UserImage)
@@ -58,7 +59,30 @@ def sort_diary_ascending():
             diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
     return diaries
 
-
+# すべての日付を返す
+def get_existent_dates():
+    exist_dates =[]
+    diaries = (
+        db.session.query(UserImage.date)
+        .join(User)
+        .order_by(UserImage.date)
+    )
+    exist_dates = [date[0] for date in diaries.distinct()]
+    return exist_dates
+# 最新の日付を返す
+def get_latest_date():
+    latest_date = (
+        db.session.query(UserImage.date)
+        .join(User)
+        .order_by(UserImage.date.desc())  # 降順に並べ替える
+        .first()
+    )
+    if latest_date:
+        latest_date = latest_date[0]  # latest_dateを日付オブジェクトに変換
+        next_date = latest_date + timedelta(days=1)  # 1日を加算
+        return next_date
+    else:
+        return None
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
@@ -83,6 +107,8 @@ def upload_image():
 
     # UploadDiaryFormを利用してバリデーションをする
     form = UploadDiaryForm()
+    exist_dates = get_existent_dates()
+    latest_date = get_latest_date()
     if form.validate_on_submit():
         # アップロードされた画像ファイルを取得する
         file = form.image.data
@@ -109,9 +135,8 @@ def upload_image():
         diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date,diary_text=diary_text)
         db.session.add(diary)
         db.session.commit()
-
         return redirect(url_for("diary.index"))
-    return render_template("diary/upload.html", form=form)
+    return render_template("diary/upload.html", form=form,exist_dates=exist_dates,latest_date=latest_date)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/all")

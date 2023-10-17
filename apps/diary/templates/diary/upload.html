@@ -11,10 +11,18 @@
     <option value="2021-11-05"></option>
     <option value="2021-11-10"></option>
     <option value="2021-11-15"></option>
+    {% for exist_date in exist_dates %}
+        <option value="{{ exist_date }}">{{ exist_date }}</option>
+    {% endfor %}
     </datalist>
+    <select name="date" id="date" class="form-control">
+        {% for exist_date in exist_dates %}
+            <option value="{{ exist_date }}">{{ exist_date }}</option>
+        {% endfor %}
+    </select>
     <div>
         <label>
-            <span> {{ form.date(class="form-control-file") }} </span>
+            <span> {{ form.date(class="form-control-file", value=latest_date) }} </span>
         </label>
     </div>
         <div>

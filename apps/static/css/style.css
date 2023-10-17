@@ -363,3 +363,10 @@ input[type="submit"]:hover {
 footer {
   margin-bottom: 5em;
 }
+
+.allDaySaturday {
+  color: #0066ff;
+}
+.allDaySunday {
+  color: #ff0000;
+}
