@@ -150,14 +150,14 @@ def all_diary():
     ## 現在のページ番号を取得
     page = int(request.args.get(get_page_parameter(), 1))
     ## ページごとの表示件数
-    per_page = 12
+    per_page = 18
     ## ページネーションオブジェクトを作成
     pagination = Pagination(page=page, per_page=per_page, total=length)
     # 表示するデータを取得
     start = (page - 1) * per_page
     end = start + per_page
     displayed_menu = diaries[start:end]
-    return render_template("diary/all.html",current_date=current_date,current_day=current_day ,length=length, diaries=displayed_menu, pagination=pagination)
+    return render_template("diary/all.html",current_date=current_date,length=length, diaries=displayed_menu, pagination=pagination)
 
 
 @dt.errorhandler(404)

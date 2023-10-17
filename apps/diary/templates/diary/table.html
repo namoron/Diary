@@ -17,14 +17,24 @@
                     <tbody>
                         {% for month, month_diaries in year_months.items() %}
                             {% for diary in month_diaries %}
-                                <tr>
+                                {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
+                                <tr id="tableTr">
                                     {% if loop.first %}
-                                        <td rowspan="{{ loop.length }}" style="text-align:center;">{{ month }}</td>
+                                    <td rowspan="{{ loop.length }}" style="text-align:center;">{{ month }}</td>
                                     {% endif %}
-                                    <td style="text-align:center;">{{ diary.UserImage.date.strftime('/ %d') }}</td>
-                                    <td>{{ diary.UserImage.diary_text }}</td>
                                     <td style="text-align:center;">
-                                        <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
+                                            {{ diary.UserImage.date.strftime('/ %d') }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
+                                            {{ diary.UserImage.diary_text }}</td>
+                                        </a>
+                                    <td style="text-align:center;">
+                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
+                                            <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -72,7 +72,7 @@ input[type="search"] {
   margin-left: 10px;
 }
 .tablePage {
-  font-size: 1px;
+  font-size: 10px;
 }
 table {
   border-collapse: collapse;
@@ -105,6 +105,13 @@ th:last-child {
   /* 一番右の列の指定 */
   border-right: 0;
 }
+#tableTr td a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #000;
+  text-decoration: none;
+}
 .navbar-light .navbar-toggler {
   border-color: rgba(0, 0, 0, 0);
 }
@@ -115,6 +122,11 @@ th:last-child {
   background-color: #585858; /* サイドバーの背景色 */
   padding: 20px;
   box-sizing: border-box;
+}
+#upBotton {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
 }
 
 /* サイドバー内のリストスタイル */
@@ -258,7 +270,6 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: #2980b9; /* ホバー時の背景色 */
 }
-
 #diary-upload {
   /* margin: 3em 0 0 auto; */
   position: fixed;
@@ -270,6 +281,22 @@ input[type="submit"]:hover {
   z-index: 3;
 }
 #diary-upload > a {
+  height: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#diary-goup {
+  /* margin: 3em 0 0 auto; */
+  position: fixed;
+  bottom: 8%;
+  left: 0;
+  width: 20%;
+  min-width: 150px;
+  padding-right: 5%;
+  z-index: 3;
+}
+#diary-goup > a {
   height: 3em;
   display: flex;
   justify-content: center;
@@ -369,4 +396,49 @@ footer {
 }
 .allDaySunday {
   color: #ff0000;
+}
+
+#page_top {
+  width: 90px;
+  height: 90px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  opacity: 0.6;
+}
+#page_top a {
+  position: relative;
+  display: block;
+  width: 90px;
+  height: 90px;
+  text-decoration: none;
+}
+#page_top a::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f102";
+  font-size: 25px;
+  color: #3f98ef;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: -40px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+}
+#page_top a::after {
+  content: "PAGE TOP";
+  font-size: 13px;
+  color: #fff;
+  position: absolute;
+  top: 45px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  color: #3f98ef;
 }
