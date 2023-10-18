@@ -1,4 +1,4 @@
-import uuid
+import uuid,os
 from pathlib import Path
 from werkzeug.utils import secure_filename
 from apps.app import db
@@ -95,9 +95,10 @@ def index():
     return render_template("diary/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
 
 
-@dt.route("/images/<path:filename>")
-def image_file(filename):
-    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+@dt.route("/images/<int:user_id>/<path:filename>")
+def image_file(user_id, filename):
+    user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(user_id))
+    return send_from_directory(user_directory, filename)
 
 
 @dt.route("/upload", methods=["GET", "POST"])
@@ -111,6 +112,9 @@ def upload_image():
     latest_date = get_latest_date()
     if form.validate_on_submit():
         # アップロードされた画像ファイルを取得する
+        user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
+        os.makedirs(user_directory, exist_ok=True)
+
         file = form.image.data
 
         # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
@@ -128,7 +132,9 @@ def upload_image():
         # image_uuid_file_name = f"{formatted_date}{ext}"
 
         # 画像を保存する
-        image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
+        # image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
+        # file.save(image_path)
+        image_path = os.path.join(user_directory, image_uuid_file_name)
         file.save(image_path)
 
         # DBに保存する
@@ -288,7 +294,9 @@ def edit_diary(date):
             image_uuid_file_name = str(uuid.uuid4()) + ext
 
             # 画像を保存する
-            image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
+            user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
+            os.makedirs(user_directory, exist_ok=True)
+            image_path = os.path.join(user_directory, image_uuid_file_name)
             file.save(image_path)
 
             diary.UserImage.image_path = image_uuid_file_name

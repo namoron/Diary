@@ -21,7 +21,7 @@
                 <p>{{ diary.UserImage.diary_text }}</p>
             </div>
             <section>
-                <img src="{{ url_for('diary.image_file', filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
             </section>
         </div>
     {% endif %}
