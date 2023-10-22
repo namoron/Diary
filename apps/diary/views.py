@@ -1,3 +1,15 @@
+import logging
+# ログの出力名を設定（1）
+logger = logging.getLogger('LoggingTest')
+
+# ログをコンソール出力するための設定（2）
+sh = logging.StreamHandler()
+logger.addHandler(sh)
+
+# log関数でログ出力処理（3）
+# logger.log(20, 'info')
+# logger.log(30, 'warning')
+# logger.log(100, 'test')
 import uuid,os
 from pathlib import Path
 from werkzeug.utils import secure_filename
@@ -10,15 +22,15 @@ from apps.diary.models import UserImage
 from datetime import datetime, timedelta
 from flask_paginate import Pagination, get_page_parameter
 from flask import (
-    Flask,
-    Blueprint,
-    current_app,
-    redirect,
-    render_template,
-    send_from_directory,
-    url_for,
-    request,
-    flash
+  Flask,
+  Blueprint,
+  current_app,
+  redirect,
+  render_template,
+  send_from_directory,
+  url_for,
+  request,
+  flash
 )
 
 # login_required, current_userをimportする
@@ -102,54 +114,49 @@ def image_file(user_id, filename):
 
 
 @dt.route("/upload", methods=["GET", "POST"])
-# ログイン必須とする
 @login_required
 def upload_image():
-
-    # UploadDiaryFormを利用してバリデーションをする
     form = UploadDiaryForm()
     exist_dates = get_existent_dates()
     latest_date = get_latest_date()
+    date = form.date.data
+    diary_text = form.diary_text.data
+
     if form.validate_on_submit():
-        # アップロードされた画像ファイルを取得する
-        user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
-        os.makedirs(user_directory, exist_ok=True)
+        if date in exist_dates:
+            flash('その日付の日記は既に存在します')
+            latest_date = date
+            return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
+        else:
+            if form.image.data is not None:
+                # ファイルがアップロードされている場合の処理
+                user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
+                os.makedirs(user_directory, exist_ok=True)
+                file = form.image.data
+                ext = Path(file.filename).suffix
+                image_uuid_file_name = str(uuid.uuid4()) + ext
+                image_path = os.path.join(user_directory, image_uuid_file_name)
+                file.save(image_path)
 
-        file = form.image.data
+                # DBに保存する
+                diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name, date=date, diary_text=diary_text)
+            else:
+                # ファイルがアップロードされていない場合の処理
+                diary = UserImage(user_id=current_user.id, image_path=None, date=date, diary_text=diary_text)
 
-        # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
-        ext = Path(file.filename).suffix
-        image_uuid_file_name = str(uuid.uuid4()) + ext
+            db.session.add(diary)
+            db.session.commit()
+    
+            return redirect(url_for("diary.index"))
 
-        # 日付データをフォームから取得
-        date = form.date.data
-
-        # 日記の文章を取得する
-        diary_text = form.diary_text.data
-
-        # # 日付をファイル名に追加する（拡張子を含む）
-        # formatted_date = date.strftime('%Y%m%d')
-        # image_uuid_file_name = f"{formatted_date}{ext}"
-
-        # 画像を保存する
-        # image_path = Path(current_app.config["UPLOAD_FOLDER"], image_uuid_file_name)
-        # file.save(image_path)
-        image_path = os.path.join(user_directory, image_uuid_file_name)
-        file.save(image_path)
-
-        # DBに保存する
-        diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name,date=date,diary_text=diary_text)
-        db.session.add(diary)
-        db.session.commit()
-        return redirect(url_for("diary.index"))
-    return render_template("diary/upload.html", form=form,exist_dates=exist_dates,latest_date=latest_date)
+    return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/all")
 @login_required
 def all_diary():
     # UserとUserImageをJoinして画像一覧を取得する
-    # ソート順を日付が新    しいものが先に来るように修正
+    # ソート順を日付が新しいものが先に来るように修正
     diaries = sort_diary()
     length = len(diaries)
     # ページネーション
@@ -266,7 +273,6 @@ def view_diaries(date):
 @login_required
 def edit_diary(date):
     target_date = datetime.strptime(date, "%Y-%m-%d").date()
-
     form = UpdateDiaryForm()
 
     # GETリクエストの場合、データベースから日記データを取得
@@ -308,3 +314,30 @@ def edit_diary(date):
     
 
     return render_template('diary/edit.html', diary=diary, form=form)  # 日記編集フォームを表示
+
+@dt.route("/diaries/<string:date>/delete", methods=["GET"])
+@login_required
+def delete_diary(date):
+    # UserImageを日付を使って取得する
+    diary = UserImage.query.filter_by(date=date).first()
+
+    if diary:
+        # ユーザーが日記を所有しているか確認
+        if diary.user_id == str(current_user.id):
+            try:
+                # 削除処理
+                db.session.delete(diary)
+                db.session.commit()
+                flash('日記が削除されました')
+                logger.log(100, '111111111111111111111111111111111111111111111111111')
+            except Exception as e:
+                db.session.rollback()
+                flash('日記の削除中にエラーが発生しました')
+                logger.error('削除エラー: %s', str(e))
+        else:
+            flash('この日記を削除する権限がありません')
+            logger.log(100, '2222222222222222222222222222222222222222222222222222222')
+    else:
+        flash('指定された日記が見つかりません')
+        logger.log(100, '33333333333333333333333333333333333333333333333333333333333333333333')
+    return redirect(url_for("diary.index"))

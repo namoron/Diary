@@ -35,10 +35,12 @@
             </div>
             <a href="{{ url_for('diary.edit_diary', date=diary_date) }}"></a>
 
-            <section>
-                <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
-            </section>
-        </div>
+            {% if diary.UserImage.image_path %}
+            <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+            {% else %}
+                <p></p>
+            {% endif %}
+            </div>
     {% endif %}
 {% endfor %}
 </div>

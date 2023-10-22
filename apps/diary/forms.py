@@ -12,7 +12,6 @@ class UploadDiaryForm(FlaskForm):
     diary_text = TextAreaField("日記の文章")
     image = FileField(
         validators=[
-            FileRequired("画像ファイルを指定してください。"),
             FileAllowed(["png", "jpg", "jpeg"], "サポートされていない画像形式です。"),
         ]
     )
@@ -24,7 +23,6 @@ class UpdateDiaryForm(FlaskForm):
     diary_text = TextAreaField("日記の文章")
     image = FileField(
         validators=[
-            FileRequired("画像ファイルを指定してください。"),
             FileAllowed(["png", "jpg", "jpeg"], "サポートされていない画像形式です。"),
         ]
     )

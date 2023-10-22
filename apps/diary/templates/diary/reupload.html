@@ -15,9 +15,10 @@
         <option value="{{ exist_date }}">{{ exist_date }}</option>
     {% endfor %}
     </datalist>
+
     <div>
         <label>
-            <span> {{ form.date(class="form-control-file", value=latest_date) }} </span>
+            <span> {{ form.date(class="form-control-file", default=latest_date) }} </span>
         </label>
     </div>
         <div>
