@@ -41,7 +41,7 @@ def test_upload_signup_get(client):
     assert "アップロード" in rv.data.decode()
 
 
-def upload_image(client, image_path):
+def upload_diary(client, image_path):
     """画像をアップロードする"""
     image = Path(get_root_path("tests"), image_path)
     test_file = (
@@ -59,20 +59,20 @@ def upload_image(client, image_path):
 
 def test_upload_signup_post_validate(client):
     signup(client, "admin", "flaskbook@example.com", "password")
-    rv = upload_image(client, "diary/testdata/test_invalid_file.txt")
+    rv = upload_diary(client, "diary/testdata/test_invalid_file.txt")
     assert "サポートされていない画像形式です。" in rv.data.decode()
 
 
 def test_upload_signup_post(client):
     signup(client, "admin", "flaskbook@example.com", "password")
-    rv = upload_image(client, "diary/testdata/test_valid_image.jpg")
+    rv = upload_diary(client, "diary/testdata/test_valid_image.jpg")
     user_image = UserImage.query.first()
     assert user_image.image_path in rv.data.decode()
 
 
 def test_detect_no_user_image(client):
     signup(client, "admin", "flaskbook@example.com", "password")
-    upload_image(client, "diary/testdata/test_valid_image.jpg")
+    upload_diary(client, "diary/testdata/test_valid_image.jpg")
     # 存在しないIDを指定する
     rv = client.post("/detect/notexistid", follow_redirects=True)
     assert "物体検知対象の画像が存在しません。" in rv.data.decode()
@@ -83,7 +83,7 @@ def test_detect(client):
     signup(client, "admin", "flaskbook@example.com", "password")
 
     # 画像をアップロードする
-    upload_image(client, "diary/testdata/test_valid_image.jpg")
+    upload_diary(client, "diary/testdata/test_valid_image.jpg")
     user_image = UserImage.query.first()
 
     # 物体検知を実行する
@@ -98,7 +98,7 @@ def test_detect_search(client):
     signup(client, "admin", "flaskbook@example.com", "password")
 
     # 画像をアップロードする
-    upload_image(client, "diary/testdata/test_valid_image.jpg")
+    upload_diary(client, "diary/testdata/test_valid_image.jpg")
 
     user_image = UserImage.query.first()
     # 物体検知する
@@ -125,7 +125,7 @@ def test_detect_search(client):
 
 def test_delete(client):
     signup(client, "admin", "flaskbook@example.com", "password")
-    upload_image(client, "diary/testdata/test_valid_image.jpg")
+    upload_diary(client, "diary/testdata/test_valid_image.jpg")
     user_image = UserImage.query.first()
     image_path = user_image.image_path
     rv = client.post(f"/images/delete/{user_image.id}", follow_redirects=True)

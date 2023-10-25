@@ -84,7 +84,11 @@
                                     <td style="text-align:center;">{{ diary.UserImage.date.strftime('/ %d') }}</td>
                                     <td>{{ diary.UserImage.diary_text }}</td>
                                     <td style="text-align:center;">
-                                        <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px />
+                                        {% if diary.UserImage.image_path %}
+                                        <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像"  height=30 px/>
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

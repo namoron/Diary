@@ -32,6 +32,7 @@ from flask import (
   request,
   flash
 )
+import time
 
 # login_required, current_userをimportする
 from flask_login import current_user, login_required
@@ -43,12 +44,14 @@ current_date = datetime.now().strftime('%Y-%m-%d')
 #今日の曜日
 current_day = datetime.now().strftime('%a')
 
+#降順にソートする
 def sort_diary():
     diaries = (
         db.session.query(User, UserImage)
         .join(UserImage)
-        .filter(User.id == UserImage.user_id)
-        .order_by(desc(UserImage.date))  # ここで日付が新しいものが先に来るようにソート
+        .filter(User.id == UserImage.user_id) # ユーザーIDが一致するものを結合
+        .filter(User.id == current_user.id)# ログインユーザーのみの日記を表示
+        .order_by(desc(UserImage.date))  # 降順にソート
         .all()
     )
      # 日記データに曜日を追加
@@ -57,18 +60,19 @@ def sort_diary():
             diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
     return diaries
 
+#昇順にソートする
 def sort_diary_ascending():
     diaries = (
         db.session.query(User, UserImage)
         .join(UserImage)
         .filter(User.id == UserImage.user_id)
-        .order_by(asc(UserImage.date))  # ここで日付が昇順にソート
+        .filter(User.id == current_user.id)
+        .order_by(asc(UserImage.date))  # 昇順にソート
         .all()
     )
-     # 日記データに曜日を追加
     for diary in diaries:
         if diary.UserImage.date:
-            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
+            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  
     return diaries
 
 # すべての日付を返す
@@ -76,6 +80,8 @@ def get_existent_dates():
     exist_dates =[]
     diaries = (
         db.session.query(UserImage.date)
+        .filter(User.id == UserImage.user_id)
+        .filter(User.id == current_user.id)
         .join(User)
         .order_by(UserImage.date)
     )
@@ -86,6 +92,8 @@ def get_latest_date():
     latest_date = (
         db.session.query(UserImage.date)
         .join(User)
+        .filter(User.id == UserImage.user_id)       
+        .filter(User.id == current_user.id)
         .order_by(UserImage.date.desc())  # 降順に並べ替える
         .first()
     )
@@ -98,24 +106,25 @@ def get_latest_date():
 
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
+#ログインが必要
 @login_required
 def index():
     # UserとUserImageをJoinして画像一覧を取得する
-    # ソート順を日付が新しいものが先に来るように修正
     form = UploadDiaryForm()
     diaries = sort_diary()
     return render_template("diary/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
 
-
+#画像を表示するルート
 @dt.route("/images/<int:user_id>/<path:filename>")
 def image_file(user_id, filename):
     user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(user_id))
     return send_from_directory(user_directory, filename)
 
-
+#日記をアップロードするルート
 @dt.route("/upload", methods=["GET", "POST"])
 @login_required
-def upload_image():
+#日記をアップロード
+def upload_diary():
     form = UploadDiaryForm()
     exist_dates = get_existent_dates()
     latest_date = get_latest_date()
@@ -124,7 +133,8 @@ def upload_image():
 
     if form.validate_on_submit():
         if date in exist_dates:
-            flash('その日付の日記は既に存在します')
+            flash('その日付の日記は既に存在します', 'error')
+            # time.sleep(1)
             latest_date = date
             return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
         else:
@@ -190,6 +200,7 @@ def search_diary():
             db.session.query(User, UserImage)
             .join(UserImage)
             .filter(User.id == UserImage.user_id)
+            .filter(User.id == current_user.id)
             .filter(UserImage.diary_text.like(f"%{search_term}%"))  # テキストを検索
             .order_by(desc(UserImage.date))
             .all()
@@ -262,6 +273,7 @@ def view_diaries(date):
             db.session.query(User, UserImage)
             .join(UserImage)
             .filter(User.id == UserImage.user_id)
+            .filter(User.id == current_user.id)
             .filter(target_date == UserImage.date)
             .order_by(desc(UserImage.date))
             .first()
@@ -280,6 +292,7 @@ def edit_diary(date):
         db.session.query(User, UserImage)
         .join(UserImage)
         .filter(User.id == UserImage.user_id)
+        .filter(User.id == current_user.id)
         .filter(target_date == UserImage.date)
         .first()
     )
@@ -329,15 +342,16 @@ def delete_diary(date):
                 db.session.delete(diary)
                 db.session.commit()
                 flash('日記が削除されました')
-                logger.log(100, '111111111111111111111111111111111111111111111111111')
             except Exception as e:
                 db.session.rollback()
                 flash('日記の削除中にエラーが発生しました')
                 logger.error('削除エラー: %s', str(e))
         else:
             flash('この日記を削除する権限がありません')
-            logger.log(100, '2222222222222222222222222222222222222222222222222222222')
     else:
         flash('指定された日記が見つかりません')
-        logger.log(100, '33333333333333333333333333333333333333333333333333333333333333333333')
     return redirect(url_for("diary.index"))
+@dt.route("/flash")
+@login_required
+def flash():
+    return render_template("diary/flash.html")

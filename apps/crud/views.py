@@ -1,9 +1,9 @@
 from apps.app import db
 from apps.crud.forms import UserForm
 from apps.crud.models import User
-from flask import Blueprint, redirect, render_template, url_for
-from flask_login import login_required
-
+from flask import Blueprint, redirect, render_template, url_for, flash
+from flask_login import login_required,current_user
+import time
 # Blueprintでcrudアプリを生成する
 crud = Blueprint(
     "crud",
@@ -55,8 +55,14 @@ def create_user():
 @login_required
 def users():
     """ユーザーの一覧を取得する"""
-    users = User.query.all()
-    return render_template("crud/index.html", users=users)
+    # 特定のユーザーの条件を確認
+    # print(current_user.id)
+    if current_user.id == 1:
+        users = User.query.all()
+        return render_template("crud/index.html", users=users)
+    else:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.flash"))  # リダイレクトするか、他のアクションを実行してください
 
 
 # methodsにGETとPOSTを指定する

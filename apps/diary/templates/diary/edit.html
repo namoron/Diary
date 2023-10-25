@@ -22,7 +22,11 @@
         </div>
         <div class="card col-md-7 dt-image-content">
             <section>
-                <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                {% if diary.UserImage.image_path %}
+                <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                {% else %}
+                    <p>写真が投稿されていません</p>
+                {% endif %}
             </section>
         </div>
     </div>

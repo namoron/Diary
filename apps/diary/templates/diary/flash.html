@@ -1,0 +1,28 @@
+<!doctype html>
+<meta http-equiv="refresh" content=" 3; url=./">
+<title>My Application</title>
+<h1>エラー</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<div id="countdown" style="display: inline;">3 秒後に自動的にリダイレクトされます。</div>
+{% block body %}{% endblock %}
+<script>
+    var countdownElement = document.getElementById('countdown');
+    var count = parseInt(countdownElement.innerHTML);
+
+    function updateCountdown() {
+        if (count > 0) {
+            count--;
+            countdownElement.innerHTML = count + ' 秒後に自動的にリダイレクトされます。';
+        }
+    }
+
+    var countdownInterval = setInterval(updateCountdown, 1000);
+</script>
