@@ -104,6 +104,16 @@ def get_latest_date():
     else:
         return None
 
+def getAll():
+    diaries = sort_diary_ascending()
+    diaries_by_year_and_month = {}
+    for diary in diaries:
+        year = diary.UserImage.date.year
+        month = diary.UserImage.date.month
+        diaries_by_year_and_month.setdefault(year, {}).setdefault(month, []).append(diary)
+
+    year_days = {year: sum(len(month_diaries) for month_diaries in months.values()) for year, months in diaries_by_year_and_month.items()}
+    return {diaries_by_year_and_month, year_days}
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
 #ログインが必要
@@ -134,12 +144,11 @@ def upload_diary():
     if form.validate_on_submit():
         if date in exist_dates:
             flash('その日付の日記は既に存在します', 'error')
-            # time.sleep(1)
             latest_date = date
             return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
         else:
             if form.image.data is not None:
-                # ファイルがアップロードされている場合の処理
+                # 画像がアップロードされている場合の処理
                 user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
                 os.makedirs(user_directory, exist_ok=True)
                 file = form.image.data
@@ -151,23 +160,20 @@ def upload_diary():
                 # DBに保存する
                 diary = UserImage(user_id=current_user.id, image_path=image_uuid_file_name, date=date, diary_text=diary_text)
             else:
-                # ファイルがアップロードされていない場合の処理
+                # 画像がアップロードされていない場合の処理
                 diary = UserImage(user_id=current_user.id, image_path=None, date=date, diary_text=diary_text)
 
             db.session.add(diary)
             db.session.commit()
-    
             return redirect(url_for("diary.index"))
-
     return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
 
-# dtアプリケーションを使ってエンドポイントを作成する
+#日付を降順にして表示するルート
 @dt.route("/all")
 @login_required
 def all_diary():
-    # UserとUserImageをJoinして画像一覧を取得する
-    # ソート順を日付が新しいものが先に来るように修正
     diaries = sort_diary()
+    # 日記の総数を取得
     length = len(diaries)
     # ページネーション
     ## 現在のページ番号を取得
@@ -181,7 +187,6 @@ def all_diary():
     end = start + per_page
     displayed_menu = diaries[start:end]
     return render_template("diary/all.html",current_date=current_date,length=length, diaries=displayed_menu, pagination=pagination)
-
 
 @dt.errorhandler(404)
 def page_not_found(e):
@@ -208,62 +213,17 @@ def search_diary():
         return render_template("diary/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
     return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
-# dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/table/full")
 @login_required
 def full_diary():
-    # UserとUserImageをJoinして画像一覧を取得し、ソート
-    diaries = sort_diary_ascending()
-    
-    # 年ごと、月ごとに日記をグループ化した辞書を作成
-    diaries_by_year_and_month = {}
-    for diary in diaries:
-        year = diary.UserImage.date.year
-        month = diary.UserImage.date.month
-        if year not in diaries_by_year_and_month:
-            diaries_by_year_and_month[year] = {}
-        if month not in diaries_by_year_and_month[year]:
-            diaries_by_year_and_month[year][month] = []
-        diaries_by_year_and_month[year][month].append(diary)
+    diaries_by_year_and_month, year_days = getAll()
+    return render_template("diary/full.html", diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
 
-    # 年ごとの日数を計算し、テンプレートに渡す
-    year_days = {}
-    for year, months in diaries_by_year_and_month.items():
-        total_days = 0
-        for month, diaries in months.items():
-            # 各月の日数を計算して合計に加える
-            total_days += len(diaries)
-        year_days[year] = total_days
-
-    return render_template("diary/full.html", current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
-
-# dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/table/<int:date_year>")
 @login_required
 def table_diary(date_year):
-    # UserとUserImageをJoinして画像一覧を取得し、ソート
-    diaries = sort_diary_ascending()
-    
-    # 年ごと、月ごとに日記をグループ化した辞書を作成
-    diaries_by_year_and_month = {}
-    for diary in diaries:
-        year = diary.UserImage.date.year
-        month = diary.UserImage.date.month
-        if year not in diaries_by_year_and_month:
-            diaries_by_year_and_month[year] = {}
-        if month not in diaries_by_year_and_month[year]:
-            diaries_by_year_and_month[year][month] = []
-        diaries_by_year_and_month[year][month].append(diary)
-
-    # 年ごとの日数を計算し、テンプレートに渡す
-    year_days = {}
-    for year, months in diaries_by_year_and_month.items():
-        total_days = 0
-        for month, diaries in months.items():
-            # 各月の日数を計算して合計に加える
-            total_days += len(diaries)
-        year_days[year] = total_days
-    return render_template('diary/table.html',date_year=date_year, current_date=current_date, current_day=current_day, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+    diaries_by_year_and_month, year_days = getAll()
+    return render_template('diary/table.html', date_year=date_year, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
 
 @dt.route("/diaries/<string:date>")
 @login_required
@@ -311,15 +271,12 @@ def edit_diary(date):
             # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
             ext = Path(file.filename).suffix
             image_uuid_file_name = str(uuid.uuid4()) + ext
-
             # 画像を保存する
             user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(current_user.id))
             os.makedirs(user_directory, exist_ok=True)
             image_path = os.path.join(user_directory, image_uuid_file_name)
             file.save(image_path)
-
             diary.UserImage.image_path = image_uuid_file_name
-        
         # データベースを更新
         db.session.commit()
     
@@ -351,7 +308,8 @@ def delete_diary(date):
     else:
         flash('指定された日記が見つかりません')
     return redirect(url_for("diary.index"))
+    
 @dt.route("/flash")
 @login_required
-def flash():
+def crudFlash():
     return render_template("diary/flash.html")

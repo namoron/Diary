@@ -9,7 +9,7 @@ class UploadDiaryForm(FlaskForm):
     # ファイルフィールドに必要なバリデーションを設定する
     # 日付フィールドを追加
     date = DateField("日付")
-    diary_text = TextAreaField("日記の文章")
+    diary_text = TextAreaField("日記の文章", validators=[DataRequired()])
     image = FileField(
         validators=[
             FileAllowed(["png", "jpg", "jpeg"], "サポートされていない画像形式です。"),

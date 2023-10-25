@@ -62,7 +62,7 @@ def users():
         return render_template("crud/index.html", users=users)
     else:
         flash("アクセスが許可されていません。")
-        return redirect(url_for("diary.flash"))  # リダイレクトするか、他のアクションを実行してください
+        return redirect(url_for("diary.crudFlash"))  # リダイレクトするか、他のアクションを実行してください
 
 
 # methodsにGETとPOSTを指定する
