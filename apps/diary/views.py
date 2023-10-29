@@ -113,7 +113,7 @@ def getAll():
         diaries_by_year_and_month.setdefault(year, {}).setdefault(month, []).append(diary)
 
     year_days = {year: sum(len(month_diaries) for month_diaries in months.values()) for year, months in diaries_by_year_and_month.items()}
-    return {diaries_by_year_and_month, year_days}
+    return (diaries_by_year_and_month, year_days)
 # dtアプリケーションを使ってエンドポイントを作成する
 @dt.route("/")
 #ログインが必要
@@ -125,8 +125,10 @@ def index():
     return render_template("diary/index.html",current_date=current_date,current_day=current_day ,diaries=diaries,form=form)
 
 #画像を表示するルート
-@dt.route("/images/<int:user_id>/<path:filename>")
-def image_file(user_id, filename):
+@dt.route("/images/<path:filename>")
+@login_required
+def image_file(filename):
+    user_id = current_user.id 
     user_directory = os.path.join(current_app.config["UPLOAD_FOLDER"], str(user_id))
     return send_from_directory(user_directory, filename)
 
