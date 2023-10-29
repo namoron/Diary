@@ -7,7 +7,7 @@
     <input type="submit" value="検索">
 </form>
 {% if search_term %}
-    <h2>検索結果 for "{{ search_term }}"</h2>
+    <h2>{{ search_term }}</h2>
     <!-- 画像一覧を表示する -->
     {% for diary in diaries %}
     {% if diary.UserImage.date %}

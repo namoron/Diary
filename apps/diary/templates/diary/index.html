@@ -34,6 +34,7 @@
                 <div class="dt-image-text mx-2">
                     <p>{{ diary.UserImage.diary_text }}</p>
                 </div>
+                <a href="{{ url_for('diary.edit_diary', date=diary_date) }}"></a>
                 <section>
                     {% if diary.UserImage.image_path %}
                     <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />

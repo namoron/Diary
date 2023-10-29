@@ -4,10 +4,6 @@
 <div class="col-md-10 text-right dt-image-register-btn">
     <a href="{{ url_for('diary.upload_diary') }}" class="btn btn-primary">日記投稿</a>
 </div>
-<!-- 今日の年月日および曜日を表示する -->
-<div class="col-md-5">
-    <h2>日記一覧</h2>
-</div>
 <!-- 画像一覧を表示する -->
     {% if diary.UserImage.date %}
         {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
