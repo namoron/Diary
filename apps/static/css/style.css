@@ -462,3 +462,21 @@ footer {
   background: #ffd700;
   transition: all 0.3s;
 }
+
+.form-control-file {
+  width: 350px;
+  height: 40px;
+  font-size: 16px;
+}
+
+#formSelect {
+  display: none;
+}
+
+#testForm > label {
+  padding: 10px 40px;
+  color: #ffffff;
+  border-radius: 5px;
+  background-color: #384878;
+  cursor: pointer;
+}

@@ -11,45 +11,34 @@
 {% endwith %}
 
 
-    <h4>新規投稿</h4>
-    <form action="{{ url_for('diary.upload_diary') }}" method="post" enctype="multipart/form-data"
-    novalidate="novalidate">
-    {{ form.csrf_token }}
-    <input type="date" min="2021-11-20" step="7">
-    <input type="date" list="data">
-    <datalist id="data">
-    <option value="2021-11-05"></option>
-    <option value="2021-11-10"></option>
-    <option value="2021-11-15"></option>
-    {% for exist_date in exist_dates %}
-        <option value="{{ exist_date }}">{{ exist_date }}</option>
-    {% endfor %}
-    </datalist>
-    <div>
+    <h4 class="mt-4 text-center">新規投稿</h4>
+    <form class=" center-block text-center mt-5" method="POST" enctype="multipart/form-data" >
+        {{ form.hidden_tag() }}
         <label>
-            <span> {{ form.date(class="form-control-file", value=latest_date) }} </span>
+            <span>{{ form.date(class="form-control-file", value=latest_date) }}</span>
         </label>
-    </div>
-        <div>
-            <label>
-                <span> {{ form.image(class="form-control-file") }} </span>
+        <div class="my-3 " id="testForm">
+            <label class="mx-auto " >
+                <span>{{ form.image(class="form-control-file",id="formSelect") }}ファイルを選択</span>
             </label>
-        </div>
-        <div>
-            <label>
-                <span> {{ form.diary_text(class="form-control") }} </span>
-            </label>
-            {% for error in form.diary_text.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
         </div>
         {% for error in form.image.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
+        <div class="mb-3 ">
+            <div>
+                <label class="mx-auto">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="diary_text" rows="10" value = "" style="width: 350px; height: 200px;" placeholder="投稿内容" ></textarea>
+                </label>
+            </div>
+        </div>
+        {% for error in form.diary_text.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <hr />
-        <div>
-            <label> {{ form.submit(class="btn btn-primary") }} </label>
+        <div class="mt-5 text-right">
+            <label>{{ form.submit(class="btn btn-primary") }}</label>
         </div>
     </form>
-</div>
+
 {% endblock %}
