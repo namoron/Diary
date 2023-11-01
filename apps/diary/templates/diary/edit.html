@@ -1,40 +1,46 @@
 {% extends "diary/base.html" %}
 {% block content %}
 <div>
+    <!-- Flashメッセージを表示 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert alert-{{ messages[0][0] }} text-danger mt-3" >
+            {{ messages[0][1] }}
+        </div>
+    {% endif %}
+    {% endwith %}
+
     <h4>投稿編集</h4>
-    <form action="{{ url_for('diary.edit_diary', date=diary.UserImage.date) }}" method="post" enctype="multipart/form-data"
+    <form class=" center-block text-center mt-5" action="{{ url_for('diary.edit_diary', date=diary.UserImage.date) }}" method="post" enctype="multipart/form-data"
     novalidate="novalidate">
     {{ form.csrf_token }}
+    <label>
+        <span>{{ form.date(class="form-control-file", value=diary.UserImage.date) }}</span>
+    </label>
     <div>
-        <label for="date">日付</label>
-        {{ form.date(class="form-control", id="date",value=diary.UserImage.date) }}
-        <datalist id="data">
-            <option value="2021-11-05"></option>
-            <option value="2021-11-10"></option>
-            <option value="2021-11-15"></option>
-        </datalist>
-    </div>
-    <div>
-        <div>
-            <label>
-                <span> {{ form.image(class="form-control-file",id="image") }} </span>
+        <div class="my-3" id="testForm">
+            <label class="mx-auto" for="formSelect" id="fileLabel">
+              <span>{{ form.image(class="form-control-file", id="formSelect") }}ファイルを選択</span>
             </label>
-        </div>
-        <div class="card col-md-7 dt-image-content">
+            <p id="fileName" style="display: none;"></p>
+            <div id="imageContainer" style="display: none;">
+                <img id="selectedImage" src="" alt="Selected Image" class="img-fluid " style="max-width: 400px; max-height: 400px;">
+            </div>
+          </div>
+        <div class="img-fluid" id="editImage" >
             <section>
                 {% if diary.UserImage.image_path %}
-                <img src="{{ url_for('diary.image_file',filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" style="max-width: 400px; max-height: 400px;"/>
                 {% else %}
                     <p>写真が投稿されていません</p>
                 {% endif %}
             </section>
         </div>
     </div>
+    <p>投稿内容</p>
     <div>
-        <label for="diary_text">日記の文章</label>
-        <label>
-            {% set f = form.diary_text.process_data(diary.UserImage.diary_text) %}
-            <span> {{ form.diary_text(class="form-control") }} </span>
+        <label class="mx-auto">
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="diary_text" rows="10" value = "" style="width: 350px; height: 200px;" placeholder="投稿内容" >{{diary.UserImage.diary_text}}</textarea>
         </label>
         {% for error in form.diary_text.errors %}
         <span style="color: red;">{{ error }}</span>

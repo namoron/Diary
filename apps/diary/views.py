@@ -44,6 +44,21 @@ current_date = datetime.now().strftime('%Y-%m-%d')
 #今日の曜日
 current_day = datetime.now().strftime('%a')
 
+#投稿順にソートする
+def sort_upload():
+    diaries = (
+        db.session.query(User, UserImage)
+        .join(UserImage)
+        .filter(User.id == UserImage.user_id) # ユーザーIDが一致するものを結合
+        .filter(User.id == current_user.id)# ログインユーザーのみの日記を表示
+        .order_by(desc(UserImage.created_at))  # 投稿順にソート
+        .all()
+    )
+     # 日記データに曜日を追加
+    for diary in diaries:
+        if diary.UserImage.date:
+            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
+    return diaries
 #降順にソートする
 def sort_diary():
     diaries = (
@@ -167,14 +182,14 @@ def upload_diary():
 
             db.session.add(diary)
             db.session.commit()
-            return redirect(url_for("diary.index"))
+            return redirect(url_for("diary.all_diary"))
     return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
 
 #日付を降順にして表示するルート
 @dt.route("/all")
 @login_required
 def all_diary():
-    diaries = sort_diary()
+    diaries = sort_upload()
     # 日記の総数を取得
     length = len(diaries)
     # ページネーション

@@ -8,19 +8,24 @@
             {{ messages[0][1] }}
         </div>
     {% endif %}
-{% endwith %}
+    {% endwith %}
 
 
     <h4 class="mt-4 text-center">新規投稿</h4>
     <form class=" center-block text-center mt-5" method="POST" enctype="multipart/form-data" >
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
         <label>
             <span>{{ form.date(class="form-control-file", value=latest_date) }}</span>
         </label>
-        <div class="my-3 " id="testForm">
-            <label class="mx-auto " >
-                <span>{{ form.image(class="form-control-file",id="formSelect") }}ファイルを選択</span>
+        <div class="my-3" id="testForm">
+            <label class="mx-auto" for="formSelect" id="fileLabel">
+                <span>{{ form.image(class="form-control-file", id="formSelect") }}ファイルを選択</span>
             </label>
+            <p id="fileName" style="display: none;"></p>
+            <div id="imageContainer" style="display: none;">
+                <img id="selectedImage" src="" alt="Selected Image" class="img-fluid " style="max-width: 400px; max-height: 400px;">
+            </div>
+
         </div>
         {% for error in form.image.errors %}
         <span style="color: red;">{{ error }}</span>
