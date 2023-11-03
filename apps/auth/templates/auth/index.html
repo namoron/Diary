@@ -1,28 +1,24 @@
 {% extends "diary/base.html" %}
 {% block title %}ホーム{% endblock %}
 {%block content %}
-<header>
-  <h1>10年日記</h1>
-  <p>毎日の出来事を記録しましょう</p>
-</header>
-<img src="images/10.png" alt="10logo">
-<div class="container">
+<div class="text-center mt-3">
+<img src="{{ url_for('static', filename='images/biglogo.png')}}" alt="logo" class="mx-auto " style="height: 100px">
+</div>
+<div class="container mt-5">
   <h2>日記の特徴</h2>
-  <p>10年日記は、10年間にわたる出来事を簡単に記録するためのツールです。毎日、一小節だけ書くことで、自分の成長や変化を振り返ることができます。</p>
+  <p>個人的にこんな日記アプリがあればいいなぁという気持ちで作りました.</p>
 
   <h2>日記の始め方</h2>
-  <p>日記を始めるには、以下の手順を守ってください。</p>
   <ol>
-      <li>日記帳を入手します。</li>
-      <li>毎日同じ時刻に、その日の出来事や感想を一小節で書きます。</li>
-      <li>10年後に振り返り、自分の成長を感じます。</li>
+    <li>右上の新規登録ボタンから必要事項を記入</li>
+    <div class="text-center mt-3">
+    <img src="{{ url_for('static', filename='images/way1.png')}}" alt="logo" class="mx-auto " style="height: 400px">
+    </div>
+      <li>次回以降は,ログインで自分のアカウントに入ってください</li>
+      <li></li>
   </ol>
 
-  <h2>お問い合わせ</h2>
-  <p>日記に関する質問やご意見があれば、お気軽にお問い合わせください。お手伝いできることがあります。</p>
-
-  <h2>ご購入</h2>
-  <p>10年日記を購入するには、以下のリンクをクリックしてください。</p>
-  <a href="日記の購入ページのリンク">日記を購入する</a>
+  <h2>注意</h2>
+  <p>このサイトは個人による開発,運営のため一切のプライバシー及びセキュリティーに関し担保しかねます.</p>
 </div>
 {% endblock %}
