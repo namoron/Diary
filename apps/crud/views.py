@@ -17,12 +17,18 @@ crud = Blueprint(
 @crud.route("/")
 @login_required
 def index():
+    if current_user.id != 1:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.crudFlash")) 
     return render_template("crud/index.html")
 
 
 @crud.route("/sql")
 @login_required
 def sql():
+    if current_user.id != 1:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.crudFlash")) 
     db.session.query(User).all()
     return "コンソールログを確認してください"
 
@@ -30,6 +36,9 @@ def sql():
 @crud.route("/users/new", methods=["GET", "POST"])
 @login_required
 def create_user():
+    if current_user.id != 1:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.crudFlash")) 
     # UserFormをインスタンス化する
     form = UserForm()
 
@@ -56,19 +65,20 @@ def create_user():
 def users():
     """ユーザーの一覧を取得する"""
     # 特定のユーザーの条件を確認
-    # print(current_user.id)
-    if current_user.id == 1:
-        users = User.query.all()
-        return render_template("crud/index.html", users=users)
-    else:
+    if current_user.id != 1:
         flash("アクセスが許可されていません。")
-        return redirect(url_for("diary.crudFlash"))  # リダイレクトするか、他のアクションを実行してください
+        return redirect(url_for("diary.crudFlash")) 
+    users = User.query.all()
+    return render_template("crud/index.html", users=users)
 
 
 # methodsにGETとPOSTを指定する
 @crud.route("/users/<user_id>", methods=["GET", "POST"])
 @login_required
 def edit_user(user_id):
+    if current_user.id != 1:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.crudFlash")) 
     form = UserForm()
 
     # Userモデルを利用してユーザーを取得する
@@ -90,6 +100,9 @@ def edit_user(user_id):
 @crud.route("/users/<user_id>/delete", methods=["POST"])
 @login_required
 def delete_user(user_id):
+    if current_user.id != 1:
+        flash("アクセスが許可されていません。")
+        return redirect(url_for("diary.crudFlash")) 
     user = User.query.filter_by(id=user_id).first()
     db.session.delete(user)
     db.session.commit()

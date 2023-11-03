@@ -11,7 +11,7 @@ csrf = CSRFProtect()
 # LoginManagerをインスタンス化する
 login_manager = LoginManager()
 # login_view属性に未ログイン時にリダイレクトするエンドポイントを指定する
-login_manager.login_view = "auth.signup"
+login_manager.login_view = "auth.index"
 # login_message属性にログイン後に表示するメッセージを指定する
 # ここでは何も表示しないよう空を指定する
 login_manager.login_message = ""
