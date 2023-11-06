@@ -230,6 +230,12 @@ def search_diary():
         return render_template("diary/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
     return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
+@dt.route("/table")
+@login_required
+def table_diary():
+    diaries_by_year_and_month, year_days = getAll()
+    return render_template('diary/table.html', diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+
 @dt.route("/table/full")
 @login_required
 def full_diary():
@@ -238,9 +244,9 @@ def full_diary():
 
 @dt.route("/table/<int:date_year>")
 @login_required
-def table_diary(date_year):
+def tableY_diary(date_year):
     diaries_by_year_and_month, year_days = getAll()
-    return render_template('diary/table.html', date_year=date_year, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+    return render_template('diary/tableY.html', date_year=date_year, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
 
 @dt.route("/diaries/<string:date>")
 @login_required

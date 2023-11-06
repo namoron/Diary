@@ -73,6 +73,7 @@ input[type="search"] {
 }
 .tablePage {
   font-size: 10px;
+  margin-right: 2em;
 }
 table {
   border-collapse: collapse;
@@ -109,14 +110,13 @@ th:last-child {
   padding: 0;
   height: 100%;
 }
-
-#tableTr #tableTd a {
+#tableTd a {
   display: block;
   width: 100%;
   height: 100%;
   color: #000;
   text-decoration: none;
-  line-height: 100%;
+  /* line-height: 100%; */
 }
 
 #tableTr td:hover {
@@ -479,4 +479,8 @@ footer {
   border-radius: 5px;
   background-color: #384878;
   cursor: pointer;
+}
+
+.custom-list {
+  list-style-type: none;
 }

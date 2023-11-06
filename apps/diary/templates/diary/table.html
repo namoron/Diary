@@ -1,66 +1,12 @@
 {% extends "diary/base.html" %}
 {% block content %}
-    <h1>{{ date_year }}年の日記</h1>  <!-- 選択された年を表示 -->
-    <div id="table-container">
+    <h5 class="mt-5 text-center">アーカイブ</h5>
+    <ul id="year-list" class="mt-5">
         {% for year, year_months in diaries_by_year_and_month.items() %}
-            {% if year == date_year %}  <!-- 選択された年だけ表示 -->
-                <div class="year-table">
-                <table class="tablePage">
-                    <thead>
-                        <tr>
-                            <th width="40">Month</th>
-                            <th width="40">Date</th>
-                            <th>Diary Text</th>
-                            <th>Image</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for month, month_diaries in year_months.items() %}
-                            {% for diary in month_diaries %}
-                                {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
-                                <tr id="tableTr">
-                                    {% if loop.first %}
-                                    <td  rowspan="{{ loop.length }}" style="text-align:center;">{{ month }}</td>
-                                    {% endif %}
-                                    <td id = "tableTd" style="text-align:center;">
-                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
-                                            {{ diary.UserImage.date.strftime('/ %d') }}
-                                        </a>
-                                    </td>
-                                    <td id = "tableTd">
-                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
-                                            {{ diary.UserImage.diary_text }}</td>
-                                        </a>
-                                    <td  id = "tableTd" style="text-align:center;">
-                                        <a href="{{ url_for('diary.edit_diary', date=diary_date) }}">
-                                            {% if diary.UserImage.image_path %}
-                                            <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" height=30 px/>
-                                            {% else %}
-                                                <p></p>
-                                            {% endif %}
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endfor %}
-                        <tr>
-                            <td colspan="5" style="text-align:right;">Total days in {{ year }}: {{ year_days[year] }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+          <li class="card mt-1">
+            <a class="card-body text-dark" href="{{ url_for('diary.tableY_diary', date_year=year) }}">{{ year }}</a>
+          </li>
         {% endfor %}
-    </div>
-    <script>
-        // JavaScriptを使って年ごとのテーブルを配置する
-        const tableContainer = document.getElementById('table-container');
-        const yearTables = document.querySelectorAll('.year-table');
+    </ul>
 
-        yearTables.forEach((table, index) => {
-            if (index > 0) {
-                table.style.display = 'block'; // 2番目以降のテーブルを非表示にする
-            }
-        });
-    </script>
 {% endblock %}
