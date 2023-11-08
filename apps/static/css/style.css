@@ -203,7 +203,7 @@ th:last-child {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 3em auto 2em auto;
+  margin: 1em auto 2em auto;
   padding: 1em;
   justify-content: space-between;
   background-color: #fafafc;
@@ -214,6 +214,12 @@ th:last-child {
   border-radius: 50px;
   min-width: 300px; /* Set a minimum width here */
   max-width: 800px;
+}
+@media (max-width: 576px) {
+  .search {
+    margin: 0em auto 2em auto;
+    height: 50%;
+  }
 }
 
 #diary-search {
@@ -232,10 +238,64 @@ th:last-child {
   .search > form {
     align-items: center;
     justify-content: center;
-    margin-right: 2em;
+    margin-right: 1em;
   }
 }
 
+/* テキスト入力フィールドのスタイル */
+#indexInput input[type="text"],
+#indexInput input[type="date"] {
+  padding: 5px;
+  border: 2px solid #0069d9; /* ボーダーの色 */
+  border-radius: 5px; /* 角丸 */
+  outline: none; /* フォーカス時の枠線を削除 */
+  transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
+  height: 2em;
+}
+#indexInput input[type="text"] {
+  min-width: 100px;
+  width: 50%;
+  margin: 2px;
+}
+#indexInput input[type="date"] {
+  max-width: 110px;
+  padding: 0;
+  margin: 2px;
+}
+
+/* テキスト入力フィールドのフォーカス時のスタイル */
+#indexInput input[type="text"]:focus,
+#indexInput input[type="date"]:focus {
+  border-color: #e74c3c; /* フォーカス時のボーダーの色 */
+}
+/* テキスト入力フィールドのスタイル */
+#indexInput input[type="password"] {
+  padding: 5px;
+  border: 2px solid #0069d9; /* ボーダーの色 */
+  border-radius: 5px; /* 角丸 */
+  outline: none; /* フォーカス時の枠線を削除 */
+  transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
+  width: 300px; /* 幅を調整 */
+}
+
+/* テキスト入力フィールドのフォーカス時のスタイル */
+#indexInput input[type="password"]:focus {
+  border-color: #e74c3c; /* フォーカス時のボーダーの色 */
+}
+
+/* サブミットボタンのスタイル */
+#indexInput input[type="submit"] {
+  background-color: #0069d9; /* ボタンの背景色 */
+  color: white; /* ボタンのテキスト色 */
+  padding: 7px 15px;
+  margin: 3px;
+  border: none;
+  border-radius: 5px; /* 角丸 */
+  cursor: pointer;
+  transition: background-color 0.3s; /* 背景色が変化するアニメーション */
+  font-size: 16px;
+  max-width: 300px;
+}
 /* テキスト入力フィールドのスタイル */
 input[type="text"] {
   padding: 5px;

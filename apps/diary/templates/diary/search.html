@@ -4,28 +4,33 @@
 <form method="POST">
     {{ form.csrf_token }}
     <input type="text" name="search_term" placeholder="検索キーワード">
+    <input type="date" name="search_date" class="form-control" placeholder="日付を選択">
     <input type="submit" value="検索">
 </form>
-{% if search_term %}
-    <h2>{{ search_term }}</h2>
+{% if diaries %}
+    <h2>検索結果</h2>
     <!-- 画像一覧を表示する -->
-    {% for diary in diaries %}
-    {% if diary.UserImage.date %}
-        {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
-        <div class="card col-md-7 dt-image-content">
-            <header class="d-flex justify-content-between">
-                <!-- 日付を表示 (存在しない場合は表示しない) -->
-                <h2>{{ diary_date }}</h2>
-                <hr>
-            </header>
-            <div class="dt-image-text">
-                <p>{{ diary.UserImage.diary_text }}</p>
+    {% if diaries %}
+        {% for diary in diaries %}
+        {% if diary.UserImage.date %}
+            {% set diary_date = diary.UserImage.date.strftime('%Y-%m-%d') %}
+            <div class="card col-md-7 dt-image-content">
+                <header class="d-flex justify-content-between">
+                    <!-- 日付を表示 (存在しない場合は表示しない) -->
+                    <h2>{{ diary_date }}</h2>
+                    <hr>
+                </header>
+                <div class="dt-image-text">
+                    <p>{{ diary.UserImage.diary_text }}</p>
+                </div>
+                <section>
+                    <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+                </section>
             </div>
-            <section>
-                <img src="{{ url_for('diary.image_file',  user_id=diary.UserImage.user_id,filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
-            </section>
-        </div>
+        {% endif %}
+        {% endfor %}
     {% endif %}
-    {% endfor %}
+{% else %}
+    <h2 class=" mt-5 mb-5  text-center">該当する投稿なし</h2>
 {% endif %}
 {% endblock %}

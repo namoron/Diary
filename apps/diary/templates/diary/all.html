@@ -36,7 +36,7 @@
             <a href="{{ url_for('diary.edit_diary', date=diary_date) }}"></a>
 
             {% if diary.UserImage.image_path %}
-            <img src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
+            <img class="my-auto" src="{{ url_for('diary.image_file', user_id=diary.UserImage.user_id, filename=diary.UserImage.image_path) }}" alt="アップロード画像" />
             {% else %}
                 <p></p>
             {% endif %}

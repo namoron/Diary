@@ -216,18 +216,29 @@ def page_not_found(e):
 def search_diary():
     form = SearchDiaryForm()
     if request.method == "POST":
-        search_term = request.form.get("search_term")
         # SQLiteデータベースから日記を検索するクエリを実行
         diaries = (
             db.session.query(User, UserImage)
             .join(UserImage)
             .filter(User.id == UserImage.user_id)
             .filter(User.id == current_user.id)
-            .filter(UserImage.diary_text.like(f"%{search_term}%"))  # テキストを検索
             .order_by(desc(UserImage.date))
-            .all()
         )
-        return render_template("diary/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form)
+        search_term = request.form.get("search_term")
+        search_date_str = request.form.get("search_date")
+        if not search_date_str or search_term:
+            flash("どちらかを選択してください", "danger")
+            return redirect(url_for("diary.search_diary"))
+        if search_date_str:
+            try:
+                search_date = datetime.strptime(search_date_str, "%Y-%m-%d").date()
+                diaries = diaries.filter(UserImage.date == search_date)
+            except ValueError:
+                return redirect(url_for("search_diary"))
+        if search_term:
+            diaries = diaries.filter(UserImage.diary_text.like(f"%{search_term}%"))
+        diaries = diaries.order_by(desc(UserImage.date)).all()
+        return render_template("diary/search.html", current_date=current_date, current_day=current_day, diaries=diaries, search_term=search_term,form=form,search_date=search_date)
     return render_template("diary/search.html", current_date=None, current_day=None, diaries=None, search_term=None,form=form)
 
 @dt.route("/table")

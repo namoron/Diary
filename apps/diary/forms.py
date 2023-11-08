@@ -29,5 +29,6 @@ class UpdateDiaryForm(FlaskForm):
     submit = SubmitField("アップデート")
 
 class SearchDiaryForm(FlaskForm):
-    search_term = StringField('Search Diary', validators=[DataRequired()])
+    search_term = StringField('Keyword Search', validators=[DataRequired()])
+    search_date = DateField('Date Search',format='%Y-%m-%d')
     submit = SubmitField('Search')
