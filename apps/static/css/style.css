@@ -246,7 +246,7 @@ th:last-child {
 #indexInput input[type="text"],
 #indexInput input[type="date"] {
   padding: 5px;
-  border: 2px solid #0069d9; /* ボーダーの色 */
+  border: 2px solid #384878; /* ボーダーの色 */
   border-radius: 5px; /* 角丸 */
   outline: none; /* フォーカス時の枠線を削除 */
   transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
@@ -271,7 +271,7 @@ th:last-child {
 /* テキスト入力フィールドのスタイル */
 #indexInput input[type="password"] {
   padding: 5px;
-  border: 2px solid #0069d9; /* ボーダーの色 */
+  border: 2px solid #384878; /* ボーダーの色 */
   border-radius: 5px; /* 角丸 */
   outline: none; /* フォーカス時の枠線を削除 */
   transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
@@ -285,7 +285,7 @@ th:last-child {
 
 /* サブミットボタンのスタイル */
 #indexInput input[type="submit"] {
-  background-color: #0069d9; /* ボタンの背景色 */
+  background-color: #384878; /* ボタンの背景色 */
   color: white; /* ボタンのテキスト色 */
   padding: 7px 15px;
   margin: 3px;
@@ -299,7 +299,7 @@ th:last-child {
 /* テキスト入力フィールドのスタイル */
 input[type="text"] {
   padding: 5px;
-  border: 2px solid #0069d9; /* ボーダーの色 */
+  border: 2px solid #384878; /* ボーダーの色 */
   border-radius: 5px; /* 角丸 */
   outline: none; /* フォーカス時の枠線を削除 */
   transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
@@ -314,7 +314,7 @@ input[type="text"]:focus {
 /* テキスト入力フィールドのスタイル */
 input[type="password"] {
   padding: 5px;
-  border: 2px solid #0069d9; /* ボーダーの色 */
+  border: 2px solid #384878; /* ボーダーの色 */
   border-radius: 5px; /* 角丸 */
   outline: none; /* フォーカス時の枠線を削除 */
   transition: border-color 0.3s; /* ボーダーの色が変化するアニメーション */
@@ -326,22 +326,6 @@ input[type="password"]:focus {
   border-color: #e74c3c; /* フォーカス時のボーダーの色 */
 }
 
-/* サブミットボタンのスタイル */
-input[type="submit"] {
-  background-color: #0069d9; /* ボタンの背景色 */
-  color: white; /* ボタンのテキスト色 */
-  padding: 7px 15px;
-  border: none;
-  border-radius: 5px; /* 角丸 */
-  cursor: pointer;
-  transition: background-color 0.3s; /* 背景色が変化するアニメーション */
-  font-size: 16px;
-}
-
-/* サブミットボタンのホバー時のスタイル */
-input[type="submit"]:hover {
-  background-color: #2980b9; /* ホバー時の背景色 */
-}
 #diary-upload {
   /* margin: 3em 0 0 auto; */
   position: fixed;
@@ -543,4 +527,8 @@ footer {
 
 .custom-list {
   list-style-type: none;
+}
+
+#year-list {
+  padding: 0%;
 }

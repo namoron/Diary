@@ -27,6 +27,7 @@ class UpdateDiaryForm(FlaskForm):
         ]
     )
     submit = SubmitField("アップデート")
+    delete = SubmitField("画像を削除")
 
 class SearchDiaryForm(FlaskForm):
     search_term = StringField('Keyword Search', validators=[DataRequired()])

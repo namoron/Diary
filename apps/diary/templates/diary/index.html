@@ -14,7 +14,7 @@
     {% endwith %}
 </div>
 <div class="search">
-    <h5 class="d-flex align-items-center" id="diary-search">日記検索</h5>
+    <h5 class="d-flex align-items-center my-2" id="diary-search">日記検索</h5>
     <form method="POST" class="row align-items-center" id="indexInput">
         {{ form.csrf_token }}
         <input class="col-md-4" type="text" name="search_term" placeholder="検索キーワード">
@@ -26,8 +26,8 @@
 
 
 <!-- 画像アップロード画面へのリンクを追加する -->
-<div class="col-md-3 dt-image-register-btn" id="diary-upload">
-    <a href="{{ url_for('diary.upload_diary') }}" class="btn btn-primary " >日記投稿</a>
+<div class="col-md-3 dt-image-register-btn opacity-80" id="diary-upload">
+    <a href="{{ url_for('diary.upload_diary') }}" class="btn btn-diary  " >日記投稿</a>
 </div>
 <!-- 今日の年月日および曜日を表示する -->
 <div class="col-md-5">

@@ -251,7 +251,8 @@ def table_diary():
 @login_required
 def full_diary():
     diaries_by_year_and_month, year_days = getAll()
-    return render_template("diary/full.html", diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
+    return render_template("diary/full.html", diaries_by_year_and_month=diaries_by_year_and_month,
+    year_days=year_days)
 
 @dt.route("/table/<int:date_year>")
 @login_required
@@ -291,6 +292,11 @@ def edit_diary(date):
         .first()
     )
     if request.method == 'POST':
+        if form.delete.data:
+            # 削除ボタンがクリックされた場合、日記を削除する
+            db.session.delete(diary.UserImage)
+            db.session.commit()
+            return redirect(url_for('diary.index'))
         # フォームから新しいテキストと日付を取得
         new_diary_text = form.diary_text.data
         new_date = form.date.data
