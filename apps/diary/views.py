@@ -161,8 +161,7 @@ def upload_diary():
     if form.validate_on_submit():
         if date in exist_dates:
             flash('その日付の日記は既に存在します', 'error')
-            latest_date = date
-            return render_template("diary/upload.html", form=form, exist_dates=exist_dates, latest_date=latest_date)
+            return  redirect(url_for("diary.edit_diary",date= date))
         else:
             if form.image.data is not None:
                 # 画像がアップロードされている場合の処理

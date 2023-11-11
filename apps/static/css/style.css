@@ -532,3 +532,35 @@ footer {
 #year-list {
   padding: 0%;
 }
+.btn-diary {
+  color: #fff;
+  background-color: #384878;
+  border-color: #384878;
+}
+.btn-diary:hover {
+  color: #fff;
+  background-color: #425899;
+  border-color: #425899;
+}
+.btn-diary.focus,
+.btn-diary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(53, 131, 220, 0.5);
+}
+.btn-diary.disabled,
+.btn-diary:disabled {
+  color: #fff;
+  background-color: #3e5aac;
+  border-color: #3e5aac;
+}
+.btn-diary:not(:disabled):not(.disabled).active,
+.btn-diary:not(:disabled):not(.disabled):active,
+.show > .btn-diary.dropdown-toggle {
+  color: #fff;
+  background-color: #3e5aac;
+  border-color: #3e5aac;
+}
+.btn-diary:not(:disabled):not(.disabled).active:focus,
+.btn-diary:not(:disabled):not(.disabled):active:focus,
+.show > .btn-diary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(12, 43, 218, 0.5);
+}
