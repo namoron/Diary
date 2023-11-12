@@ -59,6 +59,21 @@ def sort_upload():
         if diary.UserImage.date:
             diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
     return diaries
+#編集順にソートする
+def sort_update():
+    diaries = (
+        db.session.query(User, UserImage)
+        .join(UserImage)
+        .filter(User.id == UserImage.user_id) # ユーザーIDが一致するものを結合
+        .filter(User.id == current_user.id)# ログインユーザーのみの日記を表示
+        .order_by(desc(UserImage.updated_at))  # 投稿順にソート
+        .all()
+    )
+     # 日記データに曜日を追加
+    for diary in diaries:
+        if diary.UserImage.date:
+            diary.UserImage.day_of_week = diary.UserImage.date.strftime('%a')  # 曜日を計算して追加
+    return diaries
 #降順にソートする
 def sort_diary():
     diaries = (
@@ -120,6 +135,16 @@ def get_latest_date():
         return None
 
 def getAll():
+    diaries = sort_diary()
+    diaries_by_year_and_month = {}
+    for diary in diaries:
+        year = diary.UserImage.date.year
+        month = diary.UserImage.date.month
+        diaries_by_year_and_month.setdefault(year, {}).setdefault(month, []).append(diary)
+
+    year_days = {year: sum(len(month_diaries) for month_diaries in months.values()) for year, months in diaries_by_year_and_month.items()}
+    return (diaries_by_year_and_month, year_days)
+def getAllas():
     diaries = sort_diary_ascending()
     diaries_by_year_and_month = {}
     for diary in diaries:
@@ -188,7 +213,7 @@ def upload_diary():
 @dt.route("/all")
 @login_required
 def all_diary():
-    diaries = sort_upload()
+    diaries = sort_update()
     # 日記の総数を取得
     length = len(diaries)
     # ページネーション
@@ -249,14 +274,14 @@ def table_diary():
 @dt.route("/table/full")
 @login_required
 def full_diary():
-    diaries_by_year_and_month, year_days = getAll()
+    diaries_by_year_and_month, year_days = getAllas()
     return render_template("diary/full.html", diaries_by_year_and_month=diaries_by_year_and_month,
     year_days=year_days)
 
 @dt.route("/table/<int:date_year>")
 @login_required
 def tableY_diary(date_year):
-    diaries_by_year_and_month, year_days = getAll()
+    diaries_by_year_and_month, year_days = getAllas()
     return render_template('diary/tableY.html', date_year=date_year, diaries_by_year_and_month=diaries_by_year_and_month, year_days=year_days)
 
 @dt.route("/diaries/<string:date>")
@@ -303,6 +328,7 @@ def edit_diary(date):
         # 日記の属性を更新
         diary.UserImage.diary_text = new_diary_text
         diary.UserImage.date = new_date
+        diary.UserImage.updated_at = datetime.now()
 
         # アップロードされた画像ファイルを取得する
         file = form.image.data
