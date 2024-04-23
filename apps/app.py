@@ -18,7 +18,7 @@ login_manager.login_message = ""
 
 
 # create_app関数を作成する
-def create_app(config_key):
+def create_app(config_key="local"):
     # Flaskインスタンス生成
     app = Flask(__name__)
     app.config.from_object(config[config_key])
