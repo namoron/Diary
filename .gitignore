@@ -219,3 +219,4 @@ cython_debug/
 migrations/
 *.sqlite
 apps/diary/model.pt
+.vscode/

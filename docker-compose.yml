@@ -13,17 +13,5 @@ services:
     restart: always
     tty: true
 
-  nginx:
-    image: nginx:latest
-    build:
-      context: .
-      dockerfile: dockerfile.nginx
-    ports:
-      - "8080:8080"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/nginx/nginx.conf
-      - socket:/tmp
-    restart: always
 volumes:
   socket:
