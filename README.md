@@ -1,3 +1,19 @@
+## 概要
+### 見た目
+![最新の投稿](https://github.com/namoron/Diary/assets/105638744/6c9b44e7-96fc-47bc-8617-cb16633f037a)
+最新の投稿
+
+![full](https://github.com/namoron/Diary/assets/105638744/e6b54fb7-9ef6-4b7c-aa47-5e8a3010cd1c)
+全体の投稿
+
+![edit](https://github.com/namoron/Diary/assets/105638744/11cb321e-1e58-4236-bcd6-a9be1fff8b2b)
+編集画面
+
+![login](https://github.com/namoron/Diary/assets/105638744/748100c2-aff4-409a-95cc-d4c7cd332bdd)
+ログイン画面
+
+
+
 ## 立ち上げ方法
 nginx をセットアップ
 ### /etc/nginx/nginx.conf 
