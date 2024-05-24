@@ -1,6 +1,7 @@
 FROM python:3.10.12
 # 時刻設定
-RUN cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+ENV TZ=Asia/Tokyo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /app
 COPY requirements.txt ./
 RUN apt-get update -y
