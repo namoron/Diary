@@ -220,3 +220,4 @@ migrations/
 *.sqlite
 apps/diary/model.pt
 .vscode/
+myenv
